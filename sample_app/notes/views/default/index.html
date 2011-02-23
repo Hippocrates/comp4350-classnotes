@@ -1,0 +1,31 @@
+{{ # layout.html is the base view }}
+{{ # python code is covered with these brackets }}
+{{ # the controller passed a key/value dictionary }}
+{{ # but here we access the keys as globals }}
+
+
+{{extend 'layout.html'}}
+
+{{ # all i'm going to do is output the notes collection }}
+{{ # note how web2py already knows how to output the result of a db query }}
+
+{{ # the syntax below is how you output a variable: }}
+
+<table>
+    <tr>
+        <th>Start date</th>
+        <th>End Date</th>
+        <th>File</th>
+    </tr>
+{{ for row in notes: }}
+    <tr>
+        <td>{{=row.start_date}}</td>
+        <td>{{=row.end_date}}</td> 
+        <td>{{=A("Download", _href=URL(r=request, f='download', args=[row.notes]))}}</td>
+    </tr>
+{{ pass }}
+</table>
+
+{{=A("Add new notes", _href=URL('add_notes'))}}
+
+
