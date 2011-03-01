@@ -1,0 +1,42 @@
+Technologies:
+	Framework:   Web2py
+	Database:    MySQL
+	Language:    Python 2.6
+	Webserver:   built-in web2py server
+	Source ctrl: Git
+	Server:	     WOrk locally on your machine
+
+Pre-Phases:
+	Get yourself setup! Make a hello world
+
+Phase 1:
+	Care about getting notes up and down
+	Take PDF, Text, etc. If not, convert it over.
+		Need to find something for this.
+	Store these notes by Lecture + Section
+	Store as files on the server. (Ask Dean which he prefers)
+	Search
+
+Phase 2:
+	
+
+
+Ideas:
+	- Control login with e-mail domain check. If you're from U of M, you're in.
+	- Some time classes will become stale.
+	- Might need to split up a single submission into many days.
+	- RSS of selected courses. Per user rss feeds.
+
+Misc:
+	- Unit testing is going to be tricky on the web. Need one for JS, Python.
+
+Pages:
+	- Generic homepage
+	- Login
+	- Search (Instructor, Course, Section, Submitter, Date submitted), used as filter
+		- Quick filter
+	- Pages for the course
+
+Jobs:
+	Dan: Looking into the conversion tool.
+	Edwin: make a page for all this doc stuffs
