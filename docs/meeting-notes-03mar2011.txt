@@ -1,0 +1,71 @@
+User stories:
+
+o -> read notes
+o -> write notes (upload)
+o -> read notes
+
+
+Use cases:
+
+1)  Uploading notes
+2)  Editing notes
+3)  Viewing notes
+4)  Finding notes
+5)  Adding users (user control)
+6)  Authenticating user
+7)  Flagging notes (offensive / wrong course)
+8)  Recovering Passwords
+9)  Converting documents
+10) Locking out users (banning)
+
+
+Requirements (support tech):
+
+Linux server
+
+Risks:
+
+1)  Our Web framework. Web2py isn't well known by members.
+2)  Uploading and downloading notes. We're not sure how to get this done
+3)  Server resources (load, space)
+4)  User testing
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Everything Use Cases:
+
+1)  Making notes
+2)  Editing notes
+3)  Viewing notes
+4)  Finding notes
+5)  Adding users (user control)
+6)  Removing users
+7)  Authenticating user
+8)  Defining user courses (to customize or acl users)
+9)  Getting note digests
+10) Rating notes
+11) Flagging notes (offensive / wrong course)
+12) Defining instrutors (course specific admins)
+13) Creating admins
+14) Recovering Passwords
+15) Converting documents
+16) Tagging documents (course, instructors, other metadata)
+17) Rating users
+18) Integrating faces (for creepers)
+19) Updating user profiles
+20) Creating user profiles
+21) Locking out users (banning)
+22) Handling spam
+

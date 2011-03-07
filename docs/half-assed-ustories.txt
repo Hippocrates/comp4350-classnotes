@@ -1,0 +1,15 @@
+Defined user stories:
+
+1) Uploading notes
+
+- User navigates to upload page
+- User chooses file to upload
+- User defines which course and other metadata
+- User submits
+- User reads confirmation page
+
+extensions:
+
+- File too big (need max)
+- File wrong type/unparsable
+- User not authorized (later revision)
