@@ -48,8 +48,8 @@ db.define_table('sections',
 # not linked into instructors/courses/sections yet 
 # exercise: can you add this?
 db.define_table('notes',
-	Field('start_date', 'datetime', requires=IS_NOT_EMPTY()),
-	Field('end_date', 'datetime', requires=IS_NOT_EMPTY()),
+	Field('start_date', 'datetime', requires=[IS_NOT_EMPTY(),IS_DATETIME()]),
+	Field('end_date', 'datetime', requires=[IS_NOT_EMPTY(),IS_DATETIME()]),
 	Field('notes', 'upload', requires=IS_NOT_EMPTY()),
 	created_by,
 	created_on,
