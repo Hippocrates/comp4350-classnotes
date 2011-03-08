@@ -31,6 +31,20 @@ def add_notes():
         form = crud.create(db.notes, onaccept=notes_added)
         return dict(form=form)
 
+def search_notes():
+    """
+    A (very) basic idea of how the search page might look.
+    Uses a custom FORM object
+    """
+    form = SQLFORM.factory(
+        Field('Course_ID', requires=IS_NOT_EMPTY()))
+    
+    searchResult = None
+    if form.accepts(request.vars, session, keepvalues=True):
+        searchResult = 'Here is where I would output the search results'
+    elif form.errors:
+        response.flash = 'Search field cannot be empty, because I said so'
+    return dict(form=form, results=searchResult);
 
 
 # these are default controllers enabled by web2py:

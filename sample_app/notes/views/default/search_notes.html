@@ -1,0 +1,6 @@
+{{extend 'layout.html'}}
+<h1>The search page</h1>
+{{=BEAUTIFY(form)}}
+{{if results != None:}}
+{{=BEAUTIFY(results)}}
+{{pass}}
