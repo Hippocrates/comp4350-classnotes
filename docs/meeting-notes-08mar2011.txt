@@ -1,0 +1,17 @@
+Search page:
+
+Focus stuff toward diability services. A lot less complexity
+
+With a simple five or six links for normal users?
+
+We need to nail down the search algorithm.
+
+Metadata:
+	Course
+	Who submited it
+	Date submitted
+	Date notes cover
+	Note flag (bad/offensive)
+	Other?
+
+If we (Edwin) haven't heard from Ken by Thursday, there's a problem. Contact Dean
