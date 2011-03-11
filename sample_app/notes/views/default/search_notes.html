@@ -2,5 +2,9 @@
 <h1>The search page</h1>
 {{=BEAUTIFY(form)}}
 {{if results != None:}}
-{{=BEAUTIFY(results)}}
+  {{ for row in results: }}
+    <h3>Notes from {{=row.start_date}} to {{=row.end_date}} (I don't know for which course though...)</h3>
+    Submitted By: {{=row.created_by}} <br>
+    Download: {{=A("Download", _href=URL(r=request, f='download', args=[row.notes]))}} <br> <br>
+  {{ pass }}
 {{pass}}

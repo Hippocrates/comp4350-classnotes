@@ -41,7 +41,12 @@ def search_notes():
     
     searchResult = None
     if form.accepts(request.vars, session, keepvalues=True):
-        searchResult = 'Here is where I would output the search results'
+        # here I am just grabbing all of the notes, eventually this will be
+        # replaced by the actual search method
+        # also note that this is the auto-generated db row, rather than
+        # the 'Note' object we'll be using, but they have rougly the same
+        # signature
+        searchResult = db().select(db.notes.ALL, orderby=db.notes.end_date);
     elif form.errors:
         response.flash = 'Search field cannot be empty, because I said so'
     return dict(form=form, results=searchResult);
