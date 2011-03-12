@@ -1,4 +1,4 @@
-from .. objects.course import Course
+from ...logic.objects.course import Course
 
 class AccessCourseStub:
     """ Stub implementation of course accessor """

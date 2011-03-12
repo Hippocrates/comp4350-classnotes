@@ -1,4 +1,4 @@
-from .. objects.note import Note
+from ...logic.objects.note import Note
 from datetime import date
 
 class AccessNoteStub:

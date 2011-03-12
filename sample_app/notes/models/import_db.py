@@ -3,10 +3,6 @@
 db_debug_mode = True
 
 
-
-Note = local_import('db/objects/note', db_debug_mode).Note
-Course = local_import('db/objects/course', db_debug_mode).Course
-
 AccessCourseStub = local_import('db/access/course_stub', db_debug_mode).AccessCourseStub
 AccessNoteStub = local_import('db/access/note_stub', db_debug_mode).AccessNoteStub
 
