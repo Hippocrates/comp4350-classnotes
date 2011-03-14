@@ -9,37 +9,53 @@ class NotesAccessor:
         filename = "Notes%d.%d.%d.C%d.pdf" % (start_date.year, start_date.month, start_date.day, course_id)
         return Note(start_date, end_date, filename, course_id, user_id, id=id)
 
-    def __init__(self):
+
+
+    def __init__(self, database):
         """
-        constructor for stub accessor
+        constructor
         """
-        self._next_id = 4
-        self.note_list = [
-                self.make_note_stub(1, date(2011, 01, 01), 1, 1),
-                self.make_note_stub(2, date(2011, 01, 01), 2, 1),
-                self.make_note_stub(3, date(2011, 01, 01), 3, 1)
-        ]
+        self.db = database
+        
+
 
     def get_note(self, id):
         """ 
         gets a note by its id.
         returns the note if it can be found or None if not.
         """
-        for note in self.note_list:
-            if note.id == id:
-                return note
-        return None
+        note = None
+        
+        note_row = self.db(self.db.notes.id == id).select().first()
+        if (note_row != None):
+            note = Note( note_row.start_date,
+                         note_row.end_date,
+                         note_row.notes,
+                         note_row.course_id,
+                         note_row.created_by,
+                         note_row.created_on,
+                         note_row.modified_by,
+                         note_row.modified_on,
+                         note_row.id )
+        return note
+
+
 
     def insert_note(self, note):
         """
         inserts a note into the database
         """
-        id = self._next_id
-        note.id = id 
-        self.note_list.append(note)
+        id = self.db.notes.insert( start_date = note.start_date,
+                                   end_date = note.end_date,
+                                   notes = note.notes,
+                                   course_id = note.course_id,
+                                   created_by = note.created_by,
+                                   created_on = note.created_on,
+                                   modified_by = note.modified_by,
+                                   modified_on = note.modified_on )
+        return id
 
-        self._next_id = self._next_id + 1
-        return id 
+
 
     def update_note(self, updated):
         """
@@ -50,11 +66,16 @@ class NotesAccessor:
             True if the note was updated successfully
             False if not
         """
-        for i, note in enumerate(self.note_list):
-            if note.id == updated.id:
-                self.note_list[i] == updated
-                return True
-        return False
+        result = self.db(self.db.notes.id == updated.id).update( start_date = updated.start_date,
+                                                                 end_date = updated.end_date,
+                                                                 notes = updated.notes,
+                                                                 course_id = updated.course_id,
+                                                                 created_by = updated.created_by,
+                                                                 created_on = updated.created_on,
+                                                                 modified_by = updated.modified_by,
+                                                                 modified_on = updated.modified_on )
+        return result != None #TODO: Investigate this. I'm not sure what an update returns????
+
 
 
     def delete_note(self, id):
@@ -66,23 +87,50 @@ class NotesAccessor:
             True if the note was successfully deleted
             False if not
         """
-        if hasattr(id, 'id'):
-            id = id.id
+        result = self.db(self.db.notes.id == id).delete()
+        
+        return result != None #TODO: Investigate this. I'm not sure what a delete returns????
 
-        for i, note in enumerate(self.note_list):
-            if note.id == id:
-                self.note_list.remove(note)
-                return True
-        return False
+
 
     def get_note_list(self):
         """
         Returns an array of all notes in the database
         """
-        return self.note_list
+        temp_note_list = self.db(self.db.notes.id >= 0).select().as_list()
+        note_list = []
+        for row in temp_note_list:
+            note = Note( row['start_date'],
+                         row['end_date'],
+                         row['notes'],
+                         row['course_id'],
+                         row['created_by'],
+                         row['created_on'],
+                         row['modified_by'],
+                         row['modified_on'],
+                         row['id'])
+            note_list.append(note)
+        
+        return note_list
 
-    def get_course_notes(self, id):
+
+
+    def get_course_notes(self, course_id):
         """
         returns an array of all notes in the database for course course 
+        returns an empty list if no notes exist for the course
         """
-        return [note for note in self.note_list if note.course_id == id]
+        note_list = []
+        rows = self.db(self.db.courses.id == self.db.notes.course_id and self.db.notes.course_id == course_id).select(self.db.notes.ALL)
+        for row in rows:
+            note_list.append( Note( row['start_date'],
+                                    row['end_date'],
+                                    row['notes'],
+                                    row['course_id'],
+                                    row['created_by'],
+                                    row['created_on'],
+                                    row['modified_by'],
+                                    row['modified_on'],
+                                    row['id']))
+        
+        return note_list

@@ -27,26 +27,31 @@ def courses():
     course_list = access_course.get_course_list()
 
     # return hash for easy viewing
-    #return dict(course_1 = "%s" % course_1, course_list = ["%s" % course for course in course_list])
     return dict(course_list = ["%s" % course for course in course_list])
 
 
 def notes():
-    # get a note by id
-    note_1 = access_note.get_note(1)
+    #insert note1
+    new_note1 = Note(date.today(), date.today(), "testnote1.pdf", 1, 1)
+    new_note1_id = access_note.insert_note(new_note1)
     
-    # update a note
-    note_1.notes = "Some other file.pdf"
-    access_note.update_note(note_1)
-
-
-    #delete a note
-    access_note.delete_note(2)
+    #insert note2
+    new_note2 = Note(date.today(), date.today(), "testnote2.pdf", 1, 1)
+    new_note2_id = access_note.insert_note(new_note2)
     
+    #insert note3
+    new_note3 = Note(date.today(), date.today(), "testnote3.pdf", 1, 1)
+    new_note3_id = access_note.insert_note(new_note3)
+    
+    # get note3
+    note_3 = access_note.get_note(new_note3_id)
+    
+    # update note3
+    note_3.notes = "Some_other_file.pdf"
+    access_note.update_note(note_3)
 
-    #insert a note
-    new_note = Note(date.today(), date.today(), "testnote.pdf", 1, 1)
-    access_note.insert_note(new_note)
+    #delete note2
+    access_note.delete_note(new_note2_id)
 
 
     # get the list of all nots
@@ -56,5 +61,5 @@ def notes():
     course_notes = access_note.get_course_notes(1)
 
     # return hash for easy viewing
-    return dict(note_1 = "%s" % note_1, note_list = ["%s" % note for note in note_list],
-                        course_notes = ["%s" % note for note in course_notes])
+    return dict(note_list = ["%s" % note for note in note_list],
+                course_notes = ["%s" % note for note in course_notes])

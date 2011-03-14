@@ -69,14 +69,14 @@ class CoursesAccessor:
         """
         result = self.db(self.db.courses.id == id).delete()
         
-        return result != None #TODO: Investigate this. I'm not sure what an update returns????
+        return result != None #TODO: Investigate this. I'm not sure what a delete returns????
         
         
 
     def get_course_list(self):
         """
         Returns an array of all courses in the database
-        returns an empty list if no courses exist
+        Returns an empty list if no courses exist
         """
         temp_course_list = self.db(self.db.courses.id >= 0).select().as_list()
         course_list = []
