@@ -25,32 +25,19 @@ modified_on = Field('modified_on', 'datetime', default=request.now, update=reque
 # here we define 4 simple tables
 # the relationship here may need to be adjusted as we go
 
-db.define_table('instructors',
-	Field('name', 'string', requires=IS_NOT_EMPTY()),
-	# when another table uses instructors as a foreign key
-	# this is used to define what is displayed
-	# as the text of the dropdown for each row of instructors 
-	format='%(name)s'
-)
-
 db.define_table('courses',
-	Field('name', 'string', requires=IS_NOT_EMPTY()),
+	Field('department', 'string', requires=IS_NOT_EMPTY()),
+	Field('number', 'integer', requires=IS_NOT_EMPTY()),
+	Field('section', 'string', requires=IS_NOT_EMPTY()),
+	Field('instructor', 'string', requires=IS_NOT_EMPTY()),
 	format='%(name)s'
 )
 
-db.define_table('sections',
-	Field('name', 'string', requires=IS_NOT_EMPTY()),
-	Field('instructor', db.instructors), # forein key relationship
-	Field('course',	db.courses),
-	format="%(course)s"
-)
-
-# not linked into instructors/courses/sections yet 
-# exercise: can you add this?
 db.define_table('notes',
 	Field('start_date', 'date', requires=[IS_NOT_EMPTY(),IS_DATE()]),
 	Field('end_date', 'date', requires=[IS_NOT_EMPTY(),IS_DATE()]),
 	Field('notes', 'upload', requires=IS_NOT_EMPTY()),
+	Field('course_id', db.courses, requires=IS_NOT_EMPTY()), # forein key relationship
 	created_by,
 	created_on,
 	modified_by,
