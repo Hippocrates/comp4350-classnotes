@@ -121,7 +121,7 @@ class NotesAccessor:
         returns an empty list if no notes exist for the course
         """
         note_list = []
-        rows = self.db(self.db.courses.id == self.db.notes.course_id and self.db.notes.course_id == course_id).select(self.db.notes.ALL)
+        rows = self.db(self.db.notes.course_id == course_id).select(self.db.notes.ALL)
         for row in rows:
             note_list.append( Note( row['start_date'],
                                     row['end_date'],
