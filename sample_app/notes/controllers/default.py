@@ -28,27 +28,30 @@ def add_notes():
         def notes_added(form):
                 session.flash = "You successfully added some notes"
                 redirect(URL('index'))
-        form = crud.create(db.notes, onaccept=notes_added)
+        form = crud.create(db.notes, onaccept=notes_added);
         return dict(form=form)
 
 def search_notes():
     """
-    A (very) basic idea of how the search page might look.
-    Uses a custom FORM object
+    Search page, uses a custom FORM object
     """
-    form = SQLFORM.factory(
-        Field('Course_ID', requires=IS_NOT_EMPTY()))
+    form = FORM(
+        "Department ID: ", INPUT(_type='text', _name='dept', requires=IS_NOT_EMPTY()), BR(),
+        "Course Number: ", INPUT(_type='text', _name='number', requires=IS_NOT_EMPTY()), BR(),
+        "Section ID: ", INPUT(_type='text', _name='section'), BR(),
+        "Instructor: ", INPUT(_type='text', _name='instructor'), BR(),
+                INPUT(_type='submit', _name='submit')
+    )
+
+    searchResult = None;
     
-    searchResult = None
-    if form.accepts(request.vars, session, keepvalues=True):
-        # here I am just grabbing all of the notes, eventually this will be
-        # replaced by the actual search method
-        # also note that this is the auto-generated db row, rather than
-        # the 'Note' object we'll be using, but they have rougly the same
-        # signature
-        searchResult = db().select(db.notes.ALL, orderby=db.notes.end_date);
+    if form.accepts(request.vars, session, formname='SearchForm', keepvalues=True):
+        # currently we are latched on logic giving us the ability
+        # to actually query data, so I'm just pushing stub data out for now
+        searchResult = access_note.get_note_list();
     elif form.errors:
-        response.flash = 'Search field cannot be empty, because I said so'
+        response.flash = 'At least the department code and the course number are required';
+        
     return dict(form=form, results=searchResult);
 
 
