@@ -413,8 +413,11 @@ body
   padding-top: 2em;
   padding-left: 8em;
   padding-right: 8em;
-  background-color: #5046A4;
+  background-color: #654998; 
   
+  /* Base: 3E1883
+      Kuler, monochromatic
+  */
 }
 
 #header
