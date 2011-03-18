@@ -413,21 +413,7 @@ body
   padding-top: 2em;
   padding-left: 8em;
   padding-right: 8em;
-  background-color: rgb(124,38,205);
-  background-image: url(../images/grad.png);
-  background-repeat: repeat-y;
-  background: -webkit-gradient(
-      linear,
-      left top,
-      right top,
-      color-stop(1, rgb(124,38,205)),
-      color-stop(0, rgb(0,128,128))
-  );
-  background: -moz-linear-gradient(
-      left bottom,
-      rgb(124,38,205) 100%,
-      rgb(0,128,128) 0%
-  );
+  background-color: #5046A4;
   
 }
 
