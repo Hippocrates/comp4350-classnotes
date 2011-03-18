@@ -344,10 +344,9 @@ h5 {font-size: 1.0em;}
 h6 {font-size: 0.8em;}
 
 /*********** page layout alignment, width and padding ***********/
-/*body {background-color: #000;}*/
 #container, #header, #page, #content, #statusbar,
 #footer, #wrapper { display:block; line-height: 170%; }
-#wrapper {width: 900px;}
+#wrapper {width: 100%;}
 #container {
     margin: 0 auto;
     padding: 0;
@@ -408,10 +407,115 @@ div.error {
     padding: 3px;
 }
 
-/*****************************************************
- *  HERE YOU CAN START TO WRITE YOUR OWN DIVS
- */
+/**** Notes-specific ****/
+body
+{
+  padding-top: 2em;
+  padding-left: 8em;
+  padding-right: 8em;
+  background-color: rgb(124,38,205);
+  background-image: url(../images/grad.png);
+  background-repeat: repeat-y;
+  background: -webkit-gradient(
+      linear,
+      left top,
+      right top,
+      color-stop(1, rgb(124,38,205)),
+      color-stop(0, rgb(0,128,128))
+  );
+  background: -moz-linear-gradient(
+      left bottom,
+      rgb(124,38,205) 100%,
+      rgb(0,128,128) 0%
+  );
+  
+}
 
+#header
+{
+  font-size: 120%;
+  color: rgb(2, 240, 244);
+}
+
+#header A:link, #header A:visited
+{
+  color: #99e;
+}
+#header A:hover
+{
+  color: #AAF;
+}
+
+#page A:link, #page A:visited
+{
+  color: #88d;
+}
+#page A:hover
+{
+  color: #AAF;
+}
+
+#appname
+{
+  color: rgb(186, 165, 247);
+}
+
+#statusbar
+{
+  border-style: none;
+  padding: none;
+  width:auto;
+  
+  background:none;
+}
+
+#page
+{
+  border-radius: 5px;
+  border-style: none;
+  padding: 2em;
+  padding-top: 1em;
+  padding-bottom: 1em;
+  background: rgb(62, 24, 131);
+  color: #eee;
+  
+  -moz-box-shadow: 3px 3px 3px #333;
+  -webkit-box-shadow: 3px 3px 3px #333;
+  box-shadow: 3px 3px 3px #333;
+}
+
+#footer
+{
+  background: none;
+  border: none;
+  color: white;
+  float:right;
+}
+
+#page
+{
+
+}
+
+#wrapper
+{
+  background: none;
+}
+
+th
+{
+  font-weight: 200%;
+}
+
+input[type=text], input[type=password], textarea, select
+{
+  background: #dddddd;
+}
+
+input
+{
+  color: #aaa;
+}
 
 
 /*
@@ -456,4 +560,3 @@ div.error {
   p, h2, h3 { orphans: 3; widows: 3; }
   h2, h3{ page-break-after: avoid; }
 }
-

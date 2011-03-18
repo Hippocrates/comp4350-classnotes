@@ -6,7 +6,16 @@
 	list-style:		none;
 }
 .sf-menu {
-	line-height:	1.0;
+	line-height:	1.0; 
+	
+	background: rgb(47, 22, 85);/*#BDD2FF;*/
+  background-image: url(../images/button.png);
+  background-repeat: repeat-x;
+  
+	border-radius: 5px;
+	-moz-box-shadow: 3px 3px 3px #333;
+  -webkit-box-shadow: 3px 3px 3px #333;
+  box-shadow: 3px 3px 3px #333;
 }
 .sf-menu ul {
 	position:		absolute;
@@ -22,10 +31,15 @@
 .sf-menu li {
 	float:			left;
 	position:		relative;
+	margin-left: 0.5em;
+	margin-right: 0.5em;
+}
+.sf-menu li li {
+  margin: 0;
 }
 .sf-menu a {
 	display:		block;
-	position:		relative;
+	position:		relative; 
 }
 .sf-menu li:hover ul,
 .sf-menu li.sfHover ul {
@@ -58,30 +72,43 @@ ul.sf-menu li li li.sfHover ul {
 	/*margin-bottom:	1em;*/
 }
 .sf-menu a {
-	border-left:	1px solid #fff;
-	/*border-top:		1px solid #CFDEFF;*/
+	border: none;
 	padding: 		.75em 1em;
 	text-decoration:none;
 }
 .sf-menu a, .sf-menu a:visited  { /* visited pseudo selector so IE6 applies text colour*/
-	color: #275b90;/*#13a;*/
+	color: #ffffff;/*#13a;*/
+	font-weight: bold;
 }
 .sf-menu li {
-	background: #dadada;/*#BDD2FF;*/
+	background: rgb(47, 22, 85);/*#BDD2FF;*/
+  background-image: url(../images/button.png);
+  background-repeat: repeat-x;
+  border-width: 0;
+  	border-radius: 0px;
 }
 .sf-menu li li {
-	background:		#AABDE6;
+	background: rgb(47, 22, 85);
+	border-radius: 0px;
 }
 .sf-menu li li a {
 	/*color: #13a;*/
+	background-image: none;
 }
 .sf-menu li li li {
-	background:		#9AAEDB;
+	background: rgb(47, 22, 85);
 }
 .sf-menu li:hover, .sf-menu li.sfHover,
 .sf-menu a:focus, .sf-menu a:hover, .sf-menu a:active {
-	background:		#CFDEFF;
 	outline:		0;
+	
+	background: rgb(75, 35, 135);
+  background-image: url(../images/button2.png);
+  background-repeat: repeat-x;
+}
+.sf-menu li li a:hover {
+	background: rgb(75, 35, 135);
+	background-image: none;
 }
 
 /*** arrows **/
