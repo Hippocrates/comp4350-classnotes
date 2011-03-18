@@ -54,6 +54,10 @@ def search_notes():
         
     return dict(form=form, results=searchResult);
 
+def loremipsum():
+    """ dummy page """
+    return dict();
+   
 
 # these are default controllers enabled by web2py:
 
