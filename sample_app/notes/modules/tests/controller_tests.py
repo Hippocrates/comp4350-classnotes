@@ -5,6 +5,7 @@ import sys
 from gluon.shell import exec_environment, env
 from gluon.compileapp import build_environment
 from gluon.globals import Request, Session, Storage, Response
+from datetime import datetime
 
 from applications.notes.modules.db.access.course_stub import AccessCourseStub;
 from applications.notes.modules.db.access.note_stub import AccessNoteStub;
@@ -45,7 +46,7 @@ class ControllerTests(unittest.TestCase):
     print(emptyResult['form'].formname);
     return Storage(kwargs);
 
-  def testSubmit(self):
+  def testSearchPost(self):
     request.vars = self.makePostVars(dept='comp',number='1020');
     request.env.request_method = 'POST';
     
@@ -57,7 +58,7 @@ class ControllerTests(unittest.TestCase):
 
     # todo: check that the data returned is in the expected format
 
-  def testFailedSubmit(self):
+  def testFailedSearchPost(self):
     # just submit some random crap that will not be accepted
     request.vars = self.makePostVars(email='ddd');
     request.env.request_method = 'POST';
@@ -68,6 +69,35 @@ class ControllerTests(unittest.TestCase):
     # that no data was returend
     self.assertTrue(result['form'].errors);
     self.assertTrue(result['results'] == None);
+    
+    
+  def testSearch(self):
+    #try finding a note added directly to the the DB
+    request.vars = self.makePostVars(dept='comp',number='1020');
+    request.env.request_method = 'POST';
+    
+    aNote = access_note.make_note_stub(0, datetime(1337, 1, 1), 1020, "user");
+    access_note.insert_note(aNote);
+    
+    result = search_notes();
+    
+    #*something* should have been returned...
+    self.assertTrue(len(result['results']) > 0);
+    
+    #a note should have been returned with the course number we want
+    foundNote = False;
+    
+    for someNote in result['results']:
+      foundNote = foundNote or (someNote.course_id == 1020 and someNote.start_date == datetime(1337, 1, 1));
+    self.assertTrue(foundNote, "Did not find the expected note in the search results");
+    
+    #*all* of the notes that have been returned should have the course number we want
+    for someNote in result['results']:
+      self.assertTrue(someNote.course_id == 1020, "Found notes in the search results that have the wrong course_id");
+      
+    
+  #would like to do a submission + find (no direct DB access),
+  #  need to figure out if I can manipulate the crud form
     
 
 # entry point
