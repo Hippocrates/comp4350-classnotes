@@ -1,5 +1,5 @@
 import unittest
-from ...objects.course import Course
+from ....logic.objects.course import Course
 from ...access.course_stub import AccessCourseStub
 
 class CourseAccessStubTest(unittest.TestCase):

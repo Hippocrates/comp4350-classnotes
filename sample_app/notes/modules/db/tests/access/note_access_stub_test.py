@@ -1,5 +1,5 @@
 import unittest
-from ...objects.note import Note
+from ....logic.objects.note import Note
 from ...access.note_stub import AccessNoteStub
 from datetime import date
 

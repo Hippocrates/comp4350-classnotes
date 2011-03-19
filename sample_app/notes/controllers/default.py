@@ -25,10 +25,22 @@ def add_notes():
         demo of building a form from the database model
         and accepting values from it
         """
+        """
         def notes_added(form):
                 session.flash = "You successfully added some notes"
                 redirect(URL('index'))
         form = crud.create(db.notes, onaccept=notes_added);
+        """
+        form = FORM(
+            "Department: ", INPUT(_type='text', _name='dept', requires=IS_NOT_EMPTY()), BR(),
+            "Course Number: ", INPUT(_type='text', _name='number', requires=IS_NOT_EMPTY()), BR(),
+            "Section: ", INPUT(_type='text', _name='section', requires=IS_NOT_EMPTY()), BR(),
+            "Start Date: ", INPUT(_type='date', _name='start_date', requires=[IS_NOT_EMPTY(),IS_DATE()]), BR(),
+            "End Date: ", INPUT(_type='date', _name='start_date', requires=[IS_NOT_EMPTY(),IS_DATE()]), BR(),
+            "Notes file (.pdf only): ", INPUT(_type='file', _name='upload', requires=IS_NOT_EMPTY()), BR(),
+            INPUT(_type='submit', _name='submit')
+        )
+                                          
         return dict(form=form)
 
 def search_notes():
