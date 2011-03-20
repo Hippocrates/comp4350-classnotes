@@ -22,6 +22,20 @@ response.meta.copyright = 'Copyright 2007-2010'
 response.menu = [
     (T('Home'), False, URL('default','index'), [])
     ]
+    
+##########################################
+## Notes menu items
+########################################## 
+    
+response.menu += [
+    (T('Add Notes'), False, URL('default','add_notes'), [])
+    ]    
+response.menu += [
+    (T('Search Notes'), False, URL('default','search_notes'), [])
+    ]    
+response.menu += [
+    (T('Edit Courses'), False, URL('default','courses'), [])
+    ]    
 
 ##########################################
 ## this is here to provide shortcuts

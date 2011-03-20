@@ -26,7 +26,9 @@ def index():
     in this case, just select all the notes and return them to the view
     """
     all_notes = db().select(db.notes.ALL, orderby=db.notes.end_date)
-    return dict(notes=all_notes)
+    all_courses = db().select(db.courses.ALL, orderby=db.courses.number)
+    
+    return dict(notes=all_notes, courses=all_courses)
 
 def courses():
     """
@@ -49,7 +51,7 @@ def courses():
     if request.vars.delete:
       EditCourses(access_course).delete_course(request.vars.delete);
       
-    courses = Searcher(access_course, access_note).search_courses(CourseSearchParams("COMP", "1010"));
+    courses = Searcher(access_course, access_note).search_courses(CourseSearchParams());
     
     return dict(courses=courses, form=form);
 

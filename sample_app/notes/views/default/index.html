@@ -11,6 +11,9 @@
 
 {{ # the syntax below is how you output a variable: }}
 
+<h2>Index</h2>
+
+<h3>Stored notes</h3>
 <table>
     <tr>
         <th>Start date</th>
@@ -26,8 +29,5 @@
 {{ pass }}
 </table>
 
-<ul>
-<li>{{=A("Add new notes", _href=URL('add_notes'))}}</li>
-<li>{{=A("Search for notes", _href=URL('search_notes'))}}</li>
-<li>{{=A("Edit courses", _href=URL('courses'))}}</li>
-</ul>
+<h3>Courses</h3>
+{{=courses}}
