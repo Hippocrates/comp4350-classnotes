@@ -75,7 +75,6 @@ def add_notes():
         )
         
         noteId = None;
-        out = None;
         
         if form.accepts(request.vars, session, formname='AddForm', keepvalues=True):
           noteId = SubmitNote(access_course,access_note).submit_note(form.vars.start_date, form.vars.end_date, form.vars.upload, 1, form.vars.dept, form.vars.number, form.vars.section);
