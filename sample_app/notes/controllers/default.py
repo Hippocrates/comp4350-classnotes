@@ -33,12 +33,12 @@ def courses():
     Controller for editing (add, remove, edit) courses
     """
     
-    form = FORM(
-            "Department: ", INPUT(_type='text', _name='dept', requires=IS_NOT_EMPTY()), BR(),
-            "Course Number: ", INPUT(_type='text', _name='number', requires=[IS_NOT_EMPTY(),IS_INT_IN_RANGE(0,None)]), BR(),
-            "Section: ", INPUT(_type='text', _name='section', requires=IS_NOT_EMPTY()), BR(),
-            "Instructor: ", INPUT(_type='text', _name='instructor', requires=IS_NOT_EMPTY()), BR(),
-            INPUT(_type='submit', _name='submit')
+    form = FORM( TABLE(
+            TR("Department: ", INPUT(_type='text', _name='dept', requires=IS_NOT_EMPTY())),
+            TR("Course Number: ", INPUT(_type='text', _name='number', requires=[IS_NOT_EMPTY(),IS_INT_IN_RANGE(0,None)])),
+            TR("Section: ", INPUT(_type='text', _name='section', requires=IS_NOT_EMPTY())),
+            TR("Instructor: ", INPUT(_type='text', _name='instructor', requires=IS_NOT_EMPTY())),
+            TR(INPUT(_type='submit', _name='submit')))
     )
     
     if form.accepts(request.vars, session, formname='CourseForm', keepvalues=True):
@@ -64,14 +64,14 @@ def add_notes():
                 redirect(URL('index'))
         form = crud.create(db.notes, onaccept=notes_added);
         """
-        form = FORM(
-            "Department: ", INPUT(_type='text', _name='dept', requires=IS_NOT_EMPTY()), BR(),
-            "Course Number: ", INPUT(_type='text', _name='number', requires=IS_NOT_EMPTY()), BR(),
-            "Section: ", INPUT(_type='text', _name='section', requires=IS_NOT_EMPTY()), BR(),
-            "Start Date: ", INPUT(_type='date', _name='start_date', requires=[IS_NOT_EMPTY(),IS_DATE()]), BR(),
-            "End Date: ", INPUT(_type='date', _name='end_date', requires=[IS_NOT_EMPTY(),IS_DATE()]), BR(),
-            "Notes file (.pdf only): ", INPUT(_type='file', _name='upload', requires=IS_NOT_EMPTY()), BR(),
-            INPUT(_type='submit', _name='submit')
+        form = FORM( TABLE(
+            TR("Department: ", INPUT(_type='text', _name='dept', requires=IS_NOT_EMPTY())),
+            TR("Course Number: ", INPUT(_type='text', _name='number', requires=IS_NOT_EMPTY())),
+            TR("Section: ", INPUT(_type='text', _name='section', requires=IS_NOT_EMPTY())),
+            TR("Start Date: ", INPUT(_type='date', _name='start_date', requires=[IS_NOT_EMPTY(),IS_DATE()])),
+            TR("End Date: ", INPUT(_type='date', _name='end_date', requires=[IS_NOT_EMPTY(),IS_DATE()])),
+            TR("Notes file (.pdf only): ", INPUT(_type='file', _name='upload', requires=IS_NOT_EMPTY())),
+            TR(INPUT(_type='submit', _name='submit')))
         )
         
         noteId = None;
@@ -91,12 +91,12 @@ def search_notes():
     """
     Search page, uses a custom FORM object
     """
-    form = FORM(
-        "Department ID: ", INPUT(_type='text', _name='dept', requires=IS_NOT_EMPTY()), BR(),
-        "Course Number: ", INPUT(_type='text', _name='number', requires=IS_NOT_EMPTY()), BR(),
-        "Section ID: ", INPUT(_type='text', _name='section'), BR(),
-        "Instructor: ", INPUT(_type='text', _name='instructor'), BR(),
-                INPUT(_type='submit', _name='submit')
+    form = FORM( TABLE(
+        TR("Department ID: ", INPUT(_type='text', _name='dept', requires=IS_NOT_EMPTY())),
+        TR("Course Number: ", INPUT(_type='text', _name='number', requires=IS_NOT_EMPTY())),
+        TR("Section ID: ", INPUT(_type='text', _name='section')),
+        TR("Instructor: ", INPUT(_type='text', _name='instructor')),
+        TR(INPUT(_type='submit', _name='submit')))
     )
 
     searchResult = None;
