@@ -9,11 +9,11 @@
   {{if len(results) > 0:}}
     {{ for note in results: }}
 
-      <h3><!--Course: {{=row.course.dept}}{{=row.course.number}}, Section: {{=row.course.section}}<br>-->
-        From {{=row.start_date}} to {{=row.end_date}}</h3>
-        Submitted By: {{=row.created_by}} <br>
-        Last Modified: {{=row.modified_on}} <br>
-        Download: {{=A("Download", _href=URL(r=request, f='download', args=[row.notes]))}} <br> <br>
+      <h3><!--Course: {{=note.course.dept}}{{=note.course.number}}, Section: {{=note.course.section}}<br>-->
+        From {{=note.start_date}} to {{=note.end_date}}</h3>
+        Submitted By: {{=note.created_by}} <br>
+        Last Modified: {{=note.modified_on}} <br>
+        Download: {{=A("Download", _href=URL(r=request, f='download', args=[note.notes]))}} <br> <br>
 
     {{pass}}
 

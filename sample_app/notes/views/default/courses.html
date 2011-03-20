@@ -1,0 +1,25 @@
+{{extend 'layout.html'}}
+<h2>Courses</h2>
+{{if len(courses) != 0:}}
+  <table id="courselist">
+    <tr>
+      <th>Department</th>
+      <th>Course Number</th>
+      <th>Section</th>
+      <th>Instructor</th>
+  {{ for row in courses: }}
+    <tr>  
+        <td>{{=row.dept}}</td>
+        <td>{{=row.number}}</td> 
+        <td>{{=row.section}}</td>
+        <td>{{=row.instructor}}</td>
+        <td><a href="?delete={{=row.id}}">Delete course</a></td>
+    </tr>
+  {{ pass }}
+  </table>
+{{else:}}
+  No courses!
+{{pass}}
+
+<h2>Add course</h2>
+{{=form}}

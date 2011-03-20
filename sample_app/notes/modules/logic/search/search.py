@@ -8,13 +8,13 @@ def course_instructor_filter(course, instructorName):
     return fuzzy_search(course.instructor, instructorName);
 
 def course_dept_filter(course, deptCode):
-    return course.dept == deptCode;
+    return str(course.dept) == str(deptCode);
 
 def course_number_filter(course, number):
-    return course.number == number;
+    return int(course.number) == int(number);
 
 def course_section_filter(course, section):
-    return course.section == section;
+    return str(course.section) == str(section);
 
 def filter_course_list(courseList, searchParams):
     result = courseList;

@@ -9,10 +9,13 @@
 ## - call exposes all registered services (none by default)
 #########################################################################
 
-Searcher=local_import('logic/search/searcher').Searcher;
-CourseSearchParams=local_import('logic/search/course_search_params').CourseSearchParams;
-NoteSearchParams=local_import('logic/search/note_search_params').NoteSearchParams;
-SubmitNote = local_import('logic/search/submit_note').SubmitNote;
+rebuildImports = True;
+
+Searcher=local_import('logic/search/searcher', rebuildImports).Searcher;
+CourseSearchParams=local_import('logic/search/course_search_params', rebuildImports).CourseSearchParams;
+NoteSearchParams=local_import('logic/search/note_search_params', rebuildImports).NoteSearchParams;
+SubmitNote = local_import('logic/search/submit_note', rebuildImports).SubmitNote;
+EditCourses = local_import('logic/search/edit_courses', rebuildImports).EditCourses;
 
 def index():
     """
@@ -24,6 +27,31 @@ def index():
     """
     all_notes = db().select(db.notes.ALL, orderby=db.notes.end_date)
     return dict(notes=all_notes)
+
+def courses():
+    """
+    Controller for editing (add, remove, edit) courses
+    """
+    
+    form = FORM(
+            "Department: ", INPUT(_type='text', _name='dept', requires=IS_NOT_EMPTY()), BR(),
+            "Course Number: ", INPUT(_type='text', _name='number', requires=[IS_NOT_EMPTY(),IS_INT_IN_RANGE(0,None)]), BR(),
+            "Section: ", INPUT(_type='text', _name='section', requires=IS_NOT_EMPTY()), BR(),
+            "Instructor: ", INPUT(_type='text', _name='instructor', requires=IS_NOT_EMPTY()), BR(),
+            INPUT(_type='submit', _name='submit')
+    )
+    
+    if form.accepts(request.vars, session, formname='CourseForm', keepvalues=True):
+      EditCourses(access_course).submit_course(form.vars.dept, form.vars.number, form.vars.section, form.vars.instructor);
+    elif form.errors:
+      response.flash = 'Required course information missing'; 
+      
+    if request.vars.delete:
+      EditCourses(access_course).delete_course(request.vars.delete);
+      
+    courses = Searcher(access_course, access_note).search_courses(CourseSearchParams("COMP", "1010"));
+    
+    return dict(courses=courses, form=form);
 
 def add_notes():
         """
@@ -47,13 +75,18 @@ def add_notes():
         )
         
         noteId = None;
+        out = None;
         
         if form.accepts(request.vars, session, formname='AddForm', keepvalues=True):
-          noteId = SubmitNote(access_course,access_note).submit_note(form['start_date'], form['end_date'], form['upload'], 1, form['dept'], form['number'], form['section']);
+          noteId = SubmitNote(access_course,access_note).submit_note(form.vars.start_date, form.vars.end_date, form.vars.upload, 1, form.vars.dept, form.vars.number, form.vars.section);
+          if noteId != None:
+            response.flash = 'Added note with ID: ' + str(noteId); 
+          else:
+            response.flash = 'Failed to add note';
           #TODO: grab User ID, replace the 1 above
                                           
                                           
-        return dict(form=form, noteId = noteId)
+        return dict(form=form)
 
 def search_notes():
     """
@@ -70,9 +103,7 @@ def search_notes():
     searchResult = None;
     
     if form.accepts(request.vars, session, formname='SearchForm', keepvalues=True):
-        # currently we are latched on logic giving us the ability
-        # to actually query data, so I'm just pushing stub data out for now
-        courseParams = CourseSearchParams(form['dept'], form['number'], form['section'], form['instructor']);
+        courseParams = CourseSearchParams(form.vars.dept, form.vars.number, form.vars.section, form.vars.instructor);
         noteParams = NoteSearchParams();
         searchResult = Searcher(access_course,access_note).search_notes(courseParams, noteParams);
         

@@ -20,7 +20,7 @@ class SubmitNote:
         # eventually, this should cross-check with the courses the given user is allowed to submit for
 
         if len(possible_courses) == 1:
-            note = Note(start_date, end_date, notes, possible_courses[0], user_id, datetime.now());
+            note = Note(start_date, end_date, notes, possible_courses[0].id, user_id, datetime.now());
             """with our note object created, submit to our db."""				 
             """our note is submitted"""
             return self.access_note.insert_note(note);
