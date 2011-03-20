@@ -1,3 +1,7 @@
 {{extend 'layout.html'}}
 <h1>Add notes here!</h1>
 {{=BEAUTIFY(form)}}
+
+{{if noteId != None:}}
+  <h3> Successfully added note with ID {{=noteId}} </h3>
+{{pass}}

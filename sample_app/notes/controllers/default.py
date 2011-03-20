@@ -9,6 +9,11 @@
 ## - call exposes all registered services (none by default)
 #########################################################################
 
+Searcher=local_import('logic/search/searcher').Searcher;
+CourseSearchParams=local_import('logic/search/course_search_params').CourseSearchParams;
+NoteSearchParams=local_import('logic/search/note_search_params').NoteSearchParams;
+SubmitNote = local_import('logic/search/submit_note').SubmitNote;
+
 def index():
     """
     sample controller
@@ -36,12 +41,19 @@ def add_notes():
             "Course Number: ", INPUT(_type='text', _name='number', requires=IS_NOT_EMPTY()), BR(),
             "Section: ", INPUT(_type='text', _name='section', requires=IS_NOT_EMPTY()), BR(),
             "Start Date: ", INPUT(_type='date', _name='start_date', requires=[IS_NOT_EMPTY(),IS_DATE()]), BR(),
-            "End Date: ", INPUT(_type='date', _name='start_date', requires=[IS_NOT_EMPTY(),IS_DATE()]), BR(),
+            "End Date: ", INPUT(_type='date', _name='end_date', requires=[IS_NOT_EMPTY(),IS_DATE()]), BR(),
             "Notes file (.pdf only): ", INPUT(_type='file', _name='upload', requires=IS_NOT_EMPTY()), BR(),
             INPUT(_type='submit', _name='submit')
         )
+        
+        noteId = None;
+        
+        if form.accepts(request.vars, session, formname='AddForm', keepvalues=True):
+          noteId = SubmitNote(access_course,access_note).submit_note(form['start_date'], form['end_date'], form['upload'], 1, form['dept'], form['number'], form['section']);
+          #TODO: grab User ID, replace the 1 above
                                           
-        return dict(form=form)
+                                          
+        return dict(form=form, noteId = noteId)
 
 def search_notes():
     """
@@ -60,7 +72,10 @@ def search_notes():
     if form.accepts(request.vars, session, formname='SearchForm', keepvalues=True):
         # currently we are latched on logic giving us the ability
         # to actually query data, so I'm just pushing stub data out for now
-        searchResult = access_note.get_note_list();
+        courseParams = CourseSearchParams(form['dept'], form['number'], form['section'], form['instructor']);
+        noteParams = NoteSearchParams();
+        searchResult = Searcher(access_course,access_note).search_notes(courseParams, noteParams);
+        
     elif form.errors:
         response.flash = 'At least the department code and the course number are required';
         
