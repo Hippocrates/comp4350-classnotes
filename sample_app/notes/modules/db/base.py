@@ -36,7 +36,7 @@ class DBContext:
         self.db.define_table('notes',
             Field('start_date', 'date', requires=[IS_NOT_EMPTY(),IS_DATE()]),
             Field('end_date', 'date', requires=[IS_NOT_EMPTY(),IS_DATE()]),
-            Field('notes', 'upload', requires=IS_NOT_EMPTY()),
+            Field('notes', 'upload', autodelete=True requires=IS_NOT_EMPTY()), # must do autodelete to avoid polluting the db with old files
             Field('course_id', self.db.courses, requires=IS_NOT_EMPTY()), # foreign key relationship
             Field('created_by', 'integer'), # eventually make this a foreign key on user table
             Field('modified_by', 'integer'), # ditto
