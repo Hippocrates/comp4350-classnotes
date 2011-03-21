@@ -36,7 +36,7 @@ db.define_table('courses',
 db.define_table('notes',
 	Field('start_date', 'date', requires=[IS_NOT_EMPTY(),IS_DATE()]),
 	Field('end_date', 'date', requires=[IS_NOT_EMPTY(),IS_DATE()]),
-	Field('notes', 'upload', requires=IS_NOT_EMPTY()),
+	Field('notes', 'upload', autodelete=True, requires=IS_NOT_EMPTY()), # without autodelete, the file will stay after the row is gone
 	Field('course_id', db.courses, requires=IS_NOT_EMPTY()), # forein key relationship
 	created_by,
 	created_on,

@@ -38,8 +38,8 @@ def courses():
     form = FORM( TABLE(
             TR("Department: ", INPUT(_type='text', _name='dept', requires=IS_NOT_EMPTY())),
             TR("Course Number: ", INPUT(_type='text', _name='number', requires=[IS_NOT_EMPTY(),IS_INT_IN_RANGE(0,None)])),
-            TR("Section: ", INPUT(_type='text', _name='section', requires=IS_NOT_EMPTY())),
-            TR("Instructor: ", INPUT(_type='text', _name='instructor', requires=IS_NOT_EMPTY())),
+            TR("Section: ", INPUT(_type='text', _name='section')),
+            TR("Instructor: ", INPUT(_type='text', _name='instructor')),
             TR(INPUT(_type='submit', _name='submit')))
     )
     
@@ -60,23 +60,15 @@ def add_notes():
         demo of building a form from the database model
         and accepting values from it
         """
-        """
-        def notes_added(form):
-                session.flash = "You successfully added some notes"
-                redirect(URL('index'))
-        form = crud.create(db.notes, onaccept=notes_added);
-        """
         form = FORM( TABLE(
             TR("Department: ", INPUT(_type='text', _name='dept', requires=IS_NOT_EMPTY())),
             TR("Course Number: ", INPUT(_type='text', _name='number', requires=IS_NOT_EMPTY())),
-            TR("Section: ", INPUT(_type='text', _name='section', requires=IS_NOT_EMPTY())),
-            TR("Start Date: ", INPUT(_type='date', _name='start_date', requires=[IS_NOT_EMPTY(),IS_DATE()])),
-            TR("End Date: ", INPUT(_type='date', _name='end_date', requires=[IS_NOT_EMPTY(),IS_DATE()])),
+            TR("Section: ", INPUT(_type='text', _name='section')),
+            TR("Start Date: ", INPUT(_class='date', _type='date', _name='start_date', requires=[IS_NOT_EMPTY(),IS_DATE()])),
+            TR("End Date: ", INPUT(_class='date', _type='date', _name='end_date', requires=[IS_NOT_EMPTY(),IS_DATE()])),
             TR("Notes file (.pdf only): ", INPUT(_type='file', _name='upload', requires=IS_NOT_EMPTY())),
             TR(INPUT(_type='submit', _name='submit')))
         )
-        
-        noteId = None;
         
         if form.accepts(request.vars, session, formname='AddForm', keepvalues=True):
           noteId = SubmitNote(access_course,access_note).submit_note(form.vars.start_date, form.vars.end_date, form.vars.upload, 1, form.vars.dept, form.vars.number, form.vars.section);
@@ -102,7 +94,7 @@ def search_notes():
     )
 
     searchResult = None;
-    
+
     if form.accepts(request.vars, session, formname='SearchForm', keepvalues=True):
         courseParams = CourseSearchParams(form.vars.dept, form.vars.number, form.vars.section, form.vars.instructor);
         noteParams = NoteSearchParams();

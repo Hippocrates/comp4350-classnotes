@@ -5,29 +5,29 @@ def fuzzy_search(a, b):
     return matcher.ratio() > 0.8;
 
 def course_instructor_filter(course, instructorName):
-    return fuzzy_search(course.instructor, instructorName);
+    return fuzzy_search(course.instructor.upper(), instructorName.upper());
 
 def course_dept_filter(course, deptCode):
-    return str(course.dept) == str(deptCode);
+    return course.dept.upper() == deptCode.upper();
 
 def course_number_filter(course, number):
     return int(course.number) == int(number);
 
 def course_section_filter(course, section):
-    return str(course.section) == str(section);
+    return course.section.upper() == section.upper();
 
 def filter_course_list(courseList, searchParams):
     result = courseList;
-    
-    if searchParams.instructor != None:
-        result = filter(lambda course: course_instructor_filter(course, searchParams.instructor), result);
-    if searchParams.department != None:
+
+    if searchParams.department != None and len(searchParams.department) > 0:
         result = filter(lambda course: course_dept_filter(course, searchParams.department), result);
-    if searchParams.section != None:
+    if searchParams.section != None and len(searchParams.section) > 0:
         result = filter(lambda course: course_section_filter(course, searchParams.section), result);
-    if searchParams.number != None:
+    if searchParams.number != None and len(searchParams.number) > 0:
         result = filter(lambda course: course_number_filter(course, searchParams.number), result);
-        
+    if searchParams.instructor != None and len(searchParams.instructor) > 0:
+        result = filter(lambda course: course_instructor_filter(course, searchParams.instructor), result);
+    
     return result;
 
 def note_course_filter(note, courseIds):

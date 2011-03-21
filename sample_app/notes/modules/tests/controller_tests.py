@@ -30,6 +30,7 @@ class ControllerTests(unittest.TestCase):
     response = Response();
     access_note = AccessNoteStub();
     access_course = AccessCourseStub();
+    #exec_environment("applications/notes/controllers/default.py", globals())
     execfile("applications/notes/controllers/default.py", globals())
     pass;
 
@@ -77,8 +78,17 @@ class ControllerTests(unittest.TestCase):
     request.env.request_method = 'POST';
     
     aNote = access_note.make_note_stub(0, datetime(1337, 1, 1), 1020, "user");
-    access_note.insert_note(aNote);
-    
+    added = access_note.insert_note(aNote);
+
+    #*check that the note was added
+    self.assertFalse(added == None);
+
+    print("This is the id: " + str(added));
+
+    re = access_note.get_note_list();
+
+    print(str(re));
+
     result = search_notes();
     
     #*something* should have been returned...
@@ -88,6 +98,7 @@ class ControllerTests(unittest.TestCase):
     foundNote = False;
     
     for someNote in result['results']:
+      print(str(someNote));
       foundNote = foundNote or (someNote.course_id == 1020 and someNote.start_date == datetime(1337, 1, 1));
     self.assertTrue(foundNote, "Did not find the expected note in the search results");
     

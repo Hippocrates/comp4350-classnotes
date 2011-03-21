@@ -6,6 +6,11 @@ from datetime import date
 
 import unittest;
 
+class DummyFileUpload:
+    def __init__(self, file, filename):
+        self.file = file;
+        self.filename = filename;
+
 class SubmitNoteTest(unittest.TestCase):
     def setUp(self):
         self.access_course = AccessCourseStub();
@@ -20,8 +25,9 @@ class SubmitNoteTest(unittest.TestCase):
         endDate = date(2011, 01, 03);
         userId = 1;
         filename = "some_fake_file.pdf";
+        fileObject = DummyFileUpload(None, filename);
         submit_result = self.submiter.submit_note(
-            startDate, endDate, filename, userId,
+            startDate, endDate, fileObject, userId,
             department, number, section );
         self.assertTrue(submit_result != None);
         note = self.access_note.get_note(submit_result);
@@ -33,8 +39,9 @@ class SubmitNoteTest(unittest.TestCase):
         endDate = date(2011, 01, 03);
         userId = 1;
         filename = "some_fake_file.pdf";
+        fileObject = DummyFileUpload(None, filename);
         submit_result = self.submiter.submit_note(
-            startDate, endDate, filename, userId,
+            startDate, endDate, fileObject, userId,
             department, number);
         self.assertTrue(submit_result != None);
         note = self.access_note.get_note(submit_result);
@@ -47,8 +54,9 @@ class SubmitNoteTest(unittest.TestCase):
         endDate = date(2011, 01, 03);
         userId = 1;
         filename = "some_fake_file.pdf";
+        fileObject = DummyFileUpload(None, filename);
         submit_result = self.submiter.submit_note(
-            startDate, endDate, filename, userId,
+            startDate, endDate, fileObject, userId,
             department, number, section );
         self.assertTrue(submit_result == None);
 

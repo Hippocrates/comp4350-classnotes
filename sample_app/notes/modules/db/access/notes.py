@@ -18,6 +18,12 @@ class NotesAccessor:
         self.db = database
         
 
+    def store_notes_file(self, stream, filename):
+        """
+        Creates a storage object for a notes file, and returns a filename that
+        can be stored in the database
+        """
+        return self.db.notes.notes.store(stream,filename)
 
     def get_note(self, id):
         """ 

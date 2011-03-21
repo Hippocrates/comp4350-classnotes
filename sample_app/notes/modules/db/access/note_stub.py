@@ -20,6 +20,13 @@ class AccessNoteStub:
                 self.make_note_stub(3, date(2011, 01, 01), 3, 1)
         ]
 
+    def store_notes_file(self, stream, filename):
+        """
+        This is a method that's only useful in the actual database, see it
+        for details
+        """
+        return filename
+
     def get_note(self, id):
         """ 
         gets a note by its id.
