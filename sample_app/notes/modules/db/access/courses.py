@@ -1,15 +1,20 @@
+from gluon.validators import *
+from gluon.sql import Field
+
 from ...logic.objects.course import Course
 
 class CoursesAccessor:
     """ implementation of course accessor """
 
-    def __init__(self, database):
+    def __init__(self, db_context):
         """
-        constructor
+        constructor. 
+        
+        params:
+            db_context - the database context
         """
-        self.db = database
-
-
+        self.db_context = db_context
+        self.db = db_context.db
 
     def get_course(self, id):
         """ 
