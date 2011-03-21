@@ -1,21 +1,21 @@
+from gluon.sql import Field
+from gluon.validators import *
+
 from ...logic.objects.note import Note
 from datetime import date
 
 class NotesAccessor:
     """ implementation of note accessor """
 
-    def make_note_stub(self, id, start_date, course_id, user_id):
-        end_date = start_date.replace(day = start_date.day+2)
-        filename = "Notes%d.%d.%d.C%d.pdf" % (start_date.year, start_date.month, start_date.day, course_id)
-        return Note(start_date, end_date, filename, course_id, user_id, id=id)
-
-
-
-    def __init__(self, database):
+    def __init__(self, db_context):
         """
-        constructor
+        constructor. 
+        
+        params:
+            db_context - the database context
         """
-        self.db = database
+        self.db_context = db_context
+        self.db = db_context.db
         
 
 

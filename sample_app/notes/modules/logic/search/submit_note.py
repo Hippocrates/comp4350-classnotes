@@ -1,4 +1,3 @@
-from ...db.access.notes import NotesAccessor
 from ..objects.note import Note
 from searcher import Searcher
 from course_search_params import CourseSearchParams

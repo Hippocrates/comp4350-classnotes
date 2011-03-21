@@ -6,9 +6,12 @@
 # import the "glue" we will build our app with
 from gluon.tools import *
 
-# setup the Database Abstraction Layer to talk to a SQLite database, stored in the global variable db
-db = DAL('sqlite://storage.sqlite')  
+DBContext = local_import("db/base", True).DBContext
 
+# setup the db context and pull a reference to the actual database into globals
+# for compatibility with web2py
+db_context = DBContext("storage.sqlite")
+db = db_context.db 
 
 # setup mail object used for sending mail 
 mail = Mail()                                		  # object used to send email 

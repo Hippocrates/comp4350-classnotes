@@ -12,5 +12,5 @@ NotesAccessor = local_import('db/access/notes', db_debug_mode).NotesAccessor
 
 
 # will replace these with similar methods that persist to a database soon
-access_course = CoursesAccessor(db)
-access_note = NotesAccessor(db)
+access_course = CoursesAccessor(db_context)
+access_note = NotesAccessor(db_context)

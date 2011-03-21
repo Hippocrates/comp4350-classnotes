@@ -1,5 +1,3 @@
-from ...db.access.notes import NotesAccessor
-from ...db.access.courses import CoursesAccessor
 from ..objects.note import Note
 from ..objects.course import Course
 import search;
