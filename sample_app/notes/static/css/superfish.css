@@ -7,15 +7,11 @@
 }
 .sf-menu {
 	line-height:	1.0; 
+	width: 100%;
 	
 	background: rgb(47, 22, 85);/*#BDD2FF;*/
   background-image: url(../images/button.png);
   background-repeat: repeat-x;
-  
-	border-radius: 5px;
-	-moz-box-shadow: 3px 3px 3px #333;
-  -webkit-box-shadow: 3px 3px 3px #333;
-  box-shadow: 3px 3px 3px #333;
 }
 .sf-menu ul {
 	position:		absolute;
@@ -44,7 +40,7 @@
 .sf-menu li:hover ul,
 .sf-menu li.sfHover ul {
 	left:			0;
-	top:			2.5em; /* match top ul list item height */
+	top:			2.25em; /* match top ul list item height */
 	z-index:		99;
 }
 ul.sf-menu li:hover li ul,

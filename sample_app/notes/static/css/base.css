@@ -410,20 +410,43 @@ div.error {
 /**** Notes-specific ****/
 body
 {
-  padding-top: 2em;
-  padding-left: 8em;
-  padding-right: 8em;
-  background-color: #654998; 
+  padding: 0;
+  background-color: rgb(246, 246, 246);
   
   /* Base: 3E1883
       Kuler, monochromatic
   */
 }
 
+#wrapper
+{
+  padding:0;
+}
+
+#page h1, h2
+{
+  border-bottom: 1px solid #aaa;
+  margin-bottom: 0.5em;
+} 
+
+#page table
+{
+  margin-bottom: 1em;
+}
+
 #header
 {
-  font-size: 120%;
+  margin: 0;
+  font-size: 150%;
+  background-color: rgb(91, 0, 152);
   color: rgb(2, 240, 244);
+  padding: 0.5em;
+  padding-left: 1em;
+}
+
+.auth_navbar
+{
+  font-size: 80%;
 }
 
 #header A:link, #header A:visited
@@ -452,8 +475,9 @@ body
 #statusbar
 {
   border-style: none;
-  padding: none;
-  width:auto;
+  padding: 0;
+  margin: 0;
+  width:100%;
   
   background:none;
 }
@@ -465,20 +489,21 @@ body
   padding: 2em;
   padding-top: 1em;
   padding-bottom: 1em;
-  background: rgb(62, 24, 131);
-  color: #eee;
-  
-  -moz-box-shadow: 3px 3px 3px #333;
-  -webkit-box-shadow: 3px 3px 3px #333;
-  box-shadow: 3px 3px 3px #333;
+  background: white;
+  color: black;
+  margin-top: 2em;  
+  margin-bottom: 1em;  
+  margin-left: 2em;  
+  margin-right: 2em;  
 }
 
 #footer
 {
   background: none;
   border: none;
-  color: white;
-  float:right;
+  color: black;
+  text-align:right;
+  margin:2em;
 }
 
 #page
@@ -498,12 +523,28 @@ th
 
 input[type=text], input[type=password], textarea, select
 {
-  background: #dddddd;
+  background: #fcfcfc;
+  border: 1px solid #777;
+  margin: 0;
 }
 
 input
 {
   color: #aaa;
+}
+
+input[type=submit], input[type=button], button {
+    margin: 0px;
+    padding-left: 1em;
+    padding-right: 1em;
+    /*width: 85px;*/
+    height: 22px;    
+    background: #eaeaea;
+    color: black;
+    border: 1px solid #777;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;    
 }
 
 
