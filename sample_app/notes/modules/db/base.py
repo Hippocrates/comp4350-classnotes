@@ -24,6 +24,24 @@ class DBContext:
             self.migrate = lambda table: True
 
         self.db = DAL("sqlite://%s" % self.db_file)
+        
+        # this is the default username table for the web2py auth module
+        # I will define it explicitly here so we can make changes to it.
+        # We can add fields to this no problems, however, the built-in auth module requires these fields at a minimum
+        self.db.define_table(
+            'users',
+            Field('first_name', length=128, default='', requires=IS_NOT_EMPTY()),
+            Field('last_name', length=128, default='', requires=IS_NOT_EMPTY()),
+            Field('email', length=128, default='', unique=True),
+            Field('password', 'password', length=512, readable=False, label='Password', requires=[IS_STRONG(), CRYPT()]),
+            Field('registration_key', length=512, writable=False, readable=False, default=''),
+            Field('reset_password_key', length=512, writable=False, readable=False, default=''),
+            Field('registration_id', length=512, writable=False, readable=False, default=''),
+            Field('role', 'integer', requires=IS_NOT_EMPTY()),
+            migrate=self.migrate('users')
+        )
+        user_table = self.db['users']
+        user_table.email.requires =[IS_EMAIL(), IS_NOT_IN_DB(self.db, user_table.email)]
 
         self.db.define_table('courses',
             Field('department', 'string', requires=IS_NOT_EMPTY()),
@@ -31,6 +49,12 @@ class DBContext:
             Field('section', 'string', requires=IS_NOT_EMPTY()),
             Field('instructor', 'string', requires=IS_NOT_EMPTY()),
             migrate=self.migrate('courses')
+        )
+        
+        self.db.define_table('enrolled',
+            Field('user_id', self.db.users, requires=IS_NOT_EMPTY()),
+            Field('course_id', self.db.courses, requires=IS_NOT_EMPTY()),
+            migrate=self.migrate('enrolled')
         )
 
         self.db.define_table('notes',

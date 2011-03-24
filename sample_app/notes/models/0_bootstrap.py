@@ -23,24 +23,7 @@ mail.settings.login = 'username:password'      		  # your credentials or None
 auth = Auth(globals(),db)                      # object with handles authentication
 auth.settings.hmac_key = 'sha512:88c35b00-2555-4e6f-b79d-063d724706f7' # set private key for hmac in the application
 
-# this is the default username table for the web2py auth module
-# I will define it explicitly here so we can make changes to it.
-# We can add fields to this no problems, however, the built-in auth module requires these fields at a minimum
-db.define_table(
-    auth.settings.table_user_name,
-    Field('first_name', length=128, default='', requires=IS_NOT_EMPTY(error_message=auth.messages.is_empty)),
-    Field('last_name', length=128, default='', requires=IS_NOT_EMPTY(error_message=auth.messages.is_empty)),
-    Field('email', length=128, default='', unique=True),
-    Field('password', 'password', length=512, readable=False, label='Password', requires=[IS_STRONG(), CRYPT()]),
-    Field('registration_key', length=512, writable=False, readable=False, default=''),
-    Field('reset_password_key', length=512, writable=False, readable=False, default=''),
-    Field('registration_id', length=512, writable=False, readable=False, default='')
-)
-user_table = db[auth.settings.table_user_name]
-user_table.email.requires =[IS_EMAIL(error_message=auth.messages.invalid_email),
-			    IS_NOT_IN_DB(db, user_table.email)]
-
-auth.settings.table_user = user_table 
+auth.settings.table_user = db.users
 auth.define_tables()                           # creates all needed tables that we haven't defined yet
 auth.settings.mailer = mail                    # for user email verification, turned off for now
 

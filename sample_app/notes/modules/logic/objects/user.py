@@ -2,16 +2,18 @@ from datetime import datetime
 
 class User:
     """ this is a class which holds information about a user entry """
-    def __init__(self, user_id,email,password_hash,lastName,firstName):
+    def __init__(self, username, email, password_hash, lastName, firstName, user_id=None):
         """ Constructor for user entry.
         Params: 
-            user_id - the id of the user
+            username - the user's name
             email - the e-mail of the user
 			password_hash - the password of the user
 			lastName - the last name of the user
 			firstName - the first name of the user
+			user_id - the id of the user
         """
         self.user_id = user_id
+        self.username = username
         self.email = email
 		self.password_hash = password_hash
         self.lastName = lastName
