@@ -9,21 +9,21 @@ class User:
         Params: 
             username - the user's name
             email - the e-mail of the user
-			password_hash - the password of the user
-			lastName - the last name of the user
-			firstName - the first name of the user
-			user_id - the id of the user
+            password_hash - the password of the user
+            lastName - the last name of the user
+            firstName - the first name of the user
+            user_id - the id of the user
         """
         self.user_id = user_id
         self.username = username
         self.email = email
-	self.password_hash = password_hash
+        self.password_hash = password_hash
         self.lastName = lastName
-	self.firstName = firstName
-	if role < 0 or role >= len(_roles):
+        self.firstName = firstName
+        if role < 0 or role >= len(_roles):
              raise "Invalid role %d" % (role);
         self.role = role;
-	
+
     def __str__(self):
         """ to string for user entry """
         return "User [user_id=%s, email=%s, lastName=%s, firstName=%s]" % \
