@@ -1,0 +1,43 @@
+{{extend 'layout.html'}}
+
+{{if len(userCourses) != 0:}}
+  <table id="courselist">
+    <tr>
+      <th>Department</th>
+      <th>Course Number</th>
+      <th>Section</th>
+      <th>Instructor</th>
+  {{for course in userCourses:}}
+    <tr>  
+        <td>{{=course.dept}}</td>
+        <td>{{=course.number}}</td> 
+        <td>{{=course.section}}</td>
+        <td>{{=course.instructor}}</td>
+        <td><a href="?remove_course={{=course.id}}">Remove course</a></td>
+    </tr>
+  {{ pass }}
+{{else:}}
+  No courses have been registered to this user yet.
+{{ pass }}
+
+{{if possibleCourses != None:}}
+  <h2>Did you mean?</h2>
+  <table id="possibleCourses">
+    <tr>
+      <th>Department</th>
+      <th>Course Number</th>
+      <th>Section</th>
+      <th>Instructor</th>
+  {{for course in possibleCourses :}}
+    <tr>  
+        <td>{{=course.dept}}</td>
+        <td>{{=course.number}}</td> 
+        <td>{{=course.section}}</td>
+        <td>{{=course.instructor}}</td>
+        <td><a href="?insert_course={{=course.id}}">Insert course</a></td>
+    </tr>
+  {{ pass }}
+{{ pass }}
+
+{{=BEAUTIFY(coursesForm)}}
+

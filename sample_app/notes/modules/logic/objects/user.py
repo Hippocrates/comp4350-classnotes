@@ -1,8 +1,10 @@
 from datetime import datetime
 
+_roles = ['Consumer', 'Submitter', 'Admin']
+
 class User:
     """ this is a class which holds information about a user entry """
-    def __init__(self, username, email, password_hash, lastName, firstName, user_id=None):
+    def __init__(self, username, role, email, password_hash, lastName, firstName, user_id=None):
         """ Constructor for user entry.
         Params: 
             username - the user's name
@@ -15,11 +17,29 @@ class User:
         self.user_id = user_id
         self.username = username
         self.email = email
-		self.password_hash = password_hash
+	self.password_hash = password_hash
         self.lastName = lastName
-		self.firstName = firstName
+	self.firstName = firstName
+	if role < 0 or role >= len(_roles):
+             raise "Invalid role %d" % (role);
+        self.role = role;
 	
     def __str__(self):
         """ to string for user entry """
         return "User [user_id=%s, email=%s, lastName=%s, firstName=%s]" % \
                     (self.user_id, self.email, self.lastName, self.firstName)
+
+    @staticmethod
+    def list_roles():
+        # return a copy of the list to avoid issues with non-immutability
+        return list(_roles);
+
+    def get_role_name(roleId):
+        return _roles[roleId];
+
+    @staticmethod
+    def get_role_id(name):
+        if name in _roles:
+          return _roles.index(name)
+        else:
+          return None;
