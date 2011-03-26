@@ -160,7 +160,7 @@ class DAOTests(unittest.TestCase):
         if not classname:
             return
         suite = unittest.TestLoader().loadTestsFromTestCase(classname)
-        runner = unittest.TextTestRunner()
+        runner = unittest.TextTestRunner(verbosity=2)
         runner.run(suite)
 
     def testCourseDAO(self):
@@ -179,7 +179,7 @@ class DAOTests(unittest.TestCase):
 # entry point
 def main():
   suite = unittest.TestLoader().loadTestsFromTestCase(DAOTests);
-  runner = unittest.TextTestRunner()
+  runner = unittest.TextTestRunner(verbosity=2)
   runner.run(suite)
 
 

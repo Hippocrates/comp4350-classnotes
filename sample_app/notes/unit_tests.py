@@ -9,5 +9,5 @@ suite.addTest(modules.db.tests.suite.suite()) # db tests
 suite.addTest(modules.logic.tests.suite.suite())
 
 # run the tests
-runner = unittest.TextTestRunner()
+runner = unittest.TextTestRunner(verbosity=2)
 runner.run(suite)
