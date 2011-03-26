@@ -51,10 +51,10 @@ class DBContext:
             migrate=self.migrate('courses')
         )
         
-        self.db.define_table('enrolled',
+        self.db.define_table('enrollments',
             Field('user_id', self.db.users, requires=IS_NOT_EMPTY()),
             Field('course_id', self.db.courses, requires=IS_NOT_EMPTY()),
-            migrate=self.migrate('enrolled')
+            migrate=self.migrate('enrollments')
         )
 
         self.db.define_table('notes',
