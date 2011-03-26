@@ -16,3 +16,8 @@ access_course = CoursesAccessor(db_context)
 access_note = NotesAccessor(db_context)
 access_user = UsersAccessor(db_context)
 access_enrollment = EnrollmentsAccessor(db_context)
+
+authed_user = None
+if auth.is_logged_in():
+    user_id = auth.user.id
+    authed_user = access_user.get_user(user_id)

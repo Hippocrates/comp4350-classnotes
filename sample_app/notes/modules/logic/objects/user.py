@@ -29,4 +29,4 @@ class User:
     def __str__(self):
         """ to string for user entry """
         return "User [user_id=%s, email=%s, lastName=%s, firstName=%s]" % \
-                    (self.user_id, self.email, self.lastName, self.firstName)
+                    (self.user_id, self.email, self.last_name, self.first_name)
