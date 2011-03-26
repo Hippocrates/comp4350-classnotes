@@ -1,9 +1,11 @@
-from datetime import datetime
-
-_roles = ['Consumer', 'Submitter', 'Admin']
 
 class User:
     """ this is a class which holds information about a user entry """
+    ROLE_CONSUMER = 0
+    ROLE_SUBMITTER = 1
+    ROLE_ADMIN = 2
+    MIN_ROLE = 0
+    MAX_ROLE = 2
     def __init__(self, username, role, email, password_hash, lastName, firstName, user_id=None):
         """ Constructor for user entry.
         Params: 
@@ -20,7 +22,7 @@ class User:
         self.password_hash = password_hash
         self.lastName = lastName
         self.firstName = firstName
-        if role < 0 or role >= len(_roles):
+        if role < self.MIN_ROLE or role > self.MAX_ROLE:
              raise "Invalid role %d" % (role);
         self.role = role;
 
