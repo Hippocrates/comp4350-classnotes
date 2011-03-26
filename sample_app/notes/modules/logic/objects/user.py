@@ -6,12 +6,12 @@ class User:
     ROLE_ADMIN = 2
     MIN_ROLE = 0
     MAX_ROLE = 2
-    def __init__(self, username, role, email, password_hash, lastName, firstName, user_id=None):
+    def __init__(self, username, role, email, password, lastName, firstName, user_id=None):
         """ Constructor for user entry.
         Params: 
             username - the user's name
             email - the e-mail of the user
-            password_hash - the password of the user
+            password - the password of the user
             lastName - the last name of the user
             firstName - the first name of the user
             user_id - the id of the user
@@ -19,11 +19,11 @@ class User:
         self.user_id = user_id
         self.username = username
         self.email = email
-        self.password_hash = password_hash
-        self.lastName = lastName
-        self.firstName = firstName
+        self.password = password
+        self.last_name = lastName
+        self.first_name = firstName
         if role < self.MIN_ROLE or role > self.MAX_ROLE:
-             raise "Invalid role %d" % (role);
+             raise Exception("Invalid role %s" % str(role))
         self.role = role;
 
     def __str__(self):

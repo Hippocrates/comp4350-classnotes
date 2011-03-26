@@ -10,6 +10,7 @@ from datetime import datetime, date
 
 from applications.notes.modules.db.access.courses import CoursesAccessor
 from applications.notes.modules.db.access.notes import NotesAccessor
+from applications.notes.modules.db.access.users import UsersAccessor
 
 from applications.notes.modules.tests.db_test_module import TestDBContext
 
@@ -88,6 +89,63 @@ class NotesAccessorTest(unittest.TestCase):
         assert len(course_notes) > 0
         assert len(course_notes) < len(all_notes)
 
+class UsersAccessorTest(unittest.TestCase):
+    def setUp(self):
+        self.db_context = TestDBContext.db_context
+        self.access_user = UsersAccessor(self.db_context)
+
+    def testConstructor(self):
+        assert self.access_user is not None
+
+    def testUserList(self):
+        assert self.access_user.get_user_list().count > 3
+
+    def testGetUser(self):
+        first = self.access_user.get_user_list()[0]
+        assert self.access_user.get_user(first.user_id) is not None
+
+    def testUpdateUser(self):
+        user = self.access_user.get_user_list()[0]
+        assert user.username != "TEST"
+        user.username = "TEST"
+        assert self.access_user.update_user(user)
+        assert self.access_user.get_user(user.user_id).username == "TEST"
+
+    def testInsertUser(self):
+        count1 = len(self.access_user.get_user_list())
+        self.access_user.insert_user(User("testy", User.ROLE_CONSUMER, "testy@gmail.com", "hash", "McTesterson", "Testy"))
+        count2 = len(self.access_user.get_user_list())
+        assert count2 > count1
+
+
+    def testDeleteUser(self):
+        assert self.access_user.get_user(1) is not None
+        assert self.access_user.delete_user(1)
+        assert self.access_user.get_user(1) is None
+
+class EnrollmentsAccessorTest(unittest.TestCase):
+    def setUp(self):
+        self.db_context = TestDBContext.db_context
+        self.access_enrollment = EnrollmentsAccessor(self.db_context)
+
+    def testInsertEnrollment(self):
+        count1 = len(self.access_enrollment.get_user_enrollments(10))
+        assert self.access_enrollment.insert_enrollment(Enrollment(10, 10)) > 0
+        count2 = len(self.access_enrollment.get_user_enrollments(10))
+        assert count2 > count1
+
+
+    def testDeleteEnrollment(self):
+        count1 = len(self.access_enrollment.get_user_enrollments(10))
+        id = self.access_enrollment.insert_enrollment(Enrollment(10, 20))
+        assert id > 0 
+        assert self.access_enrollment.delete_enrollment(id)
+        count2 = len(self.access_enrollment.get_user_enrollments(10))
+        assert count1 == count2
+
+    def testUserEnrollments(self):
+        id = self.access_enrollment.insert_enrollment(Enrollment(10, 30))
+        assert len(self.access_enrollment.get_user_enrollments(1)) > 0
 
 class DAOTests(unittest.TestCase):
     def setUp(self):
@@ -110,6 +168,12 @@ class DAOTests(unittest.TestCase):
 
     def testNoteDAO(self):
         self.testDAO(NotesAccessorTest)
+
+    def testUserDAO(self):
+        self.testDAO(UsersAccessorTest)
+
+    def testEnrollmentDAO(self):
+        self.testDAO(EnrollmentsAccessorTest)
 
 
 # entry point

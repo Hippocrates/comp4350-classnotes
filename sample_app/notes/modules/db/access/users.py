@@ -22,15 +22,15 @@ class UsersAccessor:
         """
         user = None
         
-        user_row = self.db(self.db.user.id == id).select().first()
+        user_row = self.db(self.db.users.id == id).select().first()
         if (user_row != None):
-            user = User( user_row.id,
-                         user_row.username,
+            user = User( user_row.username,
+                         user_row.role,
                          user_row.email,
-                         user_row.password_hash,
-                         user_row.lastName,
-                         user_row.firstName,
-                         user_row.role )
+                         user_row.password,
+                         user_row.last_name,
+                         user_row.first_name,
+                         user_row.id)
         return user
 
 
@@ -41,9 +41,9 @@ class UsersAccessor:
         """
         id = self.db.users.insert( username = user.username,
                                    email = user.email,
-                                   password_hash = user.password_hash,
-                                   lastName = user.lastName,
-                                   firstName = user.firstName,
+                                   password = user.password,
+                                   last_name = user.last_name,
+                                   first_name = user.first_name,
                                    role = user.role )
         return id
 
@@ -58,11 +58,11 @@ class UsersAccessor:
             True if the user was updated successfully
             False if not
         """
-        result = self.db(self.db.users.id == updated.id).update( username = updated.username,
+        result = self.db(self.db.users.id == updated.user_id).update( username = updated.username,
                                                                  email = updated.email,
-                                                                 password_hash = updated.password_hash,
-                                                                 lastName = updated.lastName,
-                                                                 firstName = updated.firstName,
+                                                                 password = updated.password,
+                                                                 last_name = updated.last_name,
+                                                                 first_name = updated.first_name,
                                                                  role = updated.role )
         return result != None #TODO: Investigate this. I'm not sure what an update returns????
 
@@ -90,12 +90,12 @@ class UsersAccessor:
         temp_user_list = self.db(self.db.users.id >= 0).select().as_list()
         user_list = []
         for row in temp_user_list:
-            user = user( row['username'],
-                         row['email'],
-                         row['password_hash'],
-                         row['lastName'],
-                         row['firstName'],
+            user = User( row['username'],
                          row['role'],
+                         row['email'],
+                         row['password'],
+                         row['last_name'],
+                         row['first_name'],
                          row['id'] )
             user_list.append(user)
         
