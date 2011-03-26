@@ -30,18 +30,3 @@ class User:
         """ to string for user entry """
         return "User [user_id=%s, email=%s, lastName=%s, firstName=%s]" % \
                     (self.user_id, self.email, self.lastName, self.firstName)
-
-    @staticmethod
-    def list_roles():
-        # return a copy of the list to avoid issues with non-immutability
-        return list(_roles);
-
-    def get_role_name(roleId):
-        return _roles[roleId];
-
-    @staticmethod
-    def get_role_id(name):
-        if name in _roles:
-          return _roles.index(name)
-        else:
-          return None;

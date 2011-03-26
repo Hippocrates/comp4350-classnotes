@@ -1,11 +1,11 @@
 import unittest
 from ....logic.objects.note import Note
-from ...access.note_stub import AccessNoteStub
+from ...access.note_stub import NoteAccessorStub
 from datetime import date
 
 class NoteAccessStubTest(unittest.TestCase):
     def setUp(self):
-        self.access_note = AccessNoteStub()
+        self.access_note = NoteAccessorStub()
 
     def testConstructor(self):
         assert self.access_note is not None

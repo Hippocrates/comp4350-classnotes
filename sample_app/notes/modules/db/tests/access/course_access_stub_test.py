@@ -1,10 +1,10 @@
 import unittest
 from ....logic.objects.course import Course
-from ...access.course_stub import AccessCourseStub
+from ...access.course_stub import CourseAccessorStub
 
 class CourseAccessStubTest(unittest.TestCase):
     def setUp(self):
-        self.access_course = AccessCourseStub()
+        self.access_course = CourseAccessorStub()
 
     def testConstructor(self):
         assert self.access_course is not None

@@ -1,7 +1,7 @@
 from ...logic.objects.note import Note
 from datetime import date
 
-class AccessNoteStub:
+class NoteAccessorStub:
     """ Stub implementation of note accessor """
 
     def make_note_stub(self, id, start_date, course_id, user_id):

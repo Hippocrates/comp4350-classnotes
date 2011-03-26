@@ -7,8 +7,10 @@ from gluon.compileapp import build_environment
 from gluon.globals import Request, Session, Storage, Response
 from datetime import datetime
 
-from applications.notes.modules.db.access.course_stub import AccessCourseStub;
-from applications.notes.modules.db.access.note_stub import AccessNoteStub;
+from applications.notes.modules.db.access.course_stub import CourseAccessorStub;
+from applications.notes.modules.db.access.note_stub import NoteAccessorStub;
+
+from applications.notes.modules.tests.db_test_module import TestDBContext
 
 # To run this application, you need to run it from inside web2py.
 # hence, with your current directory in the 'web2py' folder, run
@@ -25,16 +27,25 @@ class ControllerTests(unittest.TestCase):
     # as globals, otherwise they will not be accessible properly
     # from the tests
     global request, session, response, access_note, access_course
+    
     request = Request();
     session = Session();
     response = Response();
-    access_note = AccessNoteStub();
-    access_course = AccessCourseStub();
+    access_note = NoteAccessorStub();
+    access_course = CourseAccessorStub();
+
+    # your setUp is being called > 1 per test. 
+    # which breaks the testDBcontext. why does this happen?
+    #access_note = NoteAccessor(TestDBContext.db_context)
+    #access_course = CourseAccessor(TestDBContext.db_context)
+    #TestDBContext.init_db()
+
     #exec_environment("applications/notes/controllers/default.py", globals())
     execfile("applications/notes/controllers/default.py", globals())
     pass;
 
   def tearDown(self):
+    #TestDBContext.wipe_db()
     pass;
 
   # this is a helper method to grab the form name and form key

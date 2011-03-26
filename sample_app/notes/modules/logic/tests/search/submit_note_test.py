@@ -1,6 +1,6 @@
 from ...search.submit_note import SubmitNote
-from ....db.access.course_stub import AccessCourseStub
-from ....db.access.note_stub import AccessNoteStub
+from ....db.access.course_stub import CourseAccessorStub
+from ....db.access.note_stub import NoteAccessorStub
 
 from datetime import date
 
@@ -13,8 +13,8 @@ class DummyFileUpload:
 
 class SubmitNoteTest(unittest.TestCase):
     def setUp(self):
-        self.access_course = AccessCourseStub();
-        self.access_note = AccessNoteStub()
+        self.access_course = CourseAccessorStub();
+        self.access_note = NoteAccessorStub()
         self.submiter = SubmitNote(self.access_course, self.access_note);
 
     def testSubmit(self):

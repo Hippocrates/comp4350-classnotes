@@ -1,6 +1,6 @@
 from ...logic.objects.course import Course
 
-class AccessCourseStub:
+class CourseAccessorStub:
     """ Stub implementation of course accessor """
 
     def __init__(self):

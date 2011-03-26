@@ -63,3 +63,8 @@ def notes():
     # return hash for easy viewing
     return dict(note_list = ["%s" % note for note in note_list],
                 course_notes = ["%s" % note for note in course_notes])
+
+
+def users():
+    user_list = access_user.get_user_list()
+    return dict(user_list = ["%s" % user for user in user_list])

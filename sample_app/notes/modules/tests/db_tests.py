@@ -5,47 +5,18 @@
 
 import unittest
 
-import os
-import glob
 
 from datetime import datetime, date
-from gluon.dal import DAL
-from gluon.contrib.populate import populate
 
 from applications.notes.modules.db.access.courses import CoursesAccessor
 from applications.notes.modules.db.access.notes import NotesAccessor
 
-class TestContext(DBContext):
-    """ Class to handle setting up / destroying test database context """
-
-    @staticmethod
-    def begin():
-        """ called at the beginning of a test """
-        TestContext.db_context = DBContext("test.sqlite", lambda table: "%s.test.migrate" % table)
-        db = TestContext.db_context.db
-
-        # populate test database with dummy data
-        populate(db.courses, 100)
-        populate(db.notes, 100)
-
-    @staticmethod
-    def end():
-      """ called at the end of a test """
-      #delete migration files and test database file
-      path_to_db = os.path.join(os.getcwd(), 'applications', 'notes', 'databases')
-      TestContext.db_context.close()
-      os.unlink(os.path.join(path_to_db, TestContext.db_context.db_file))
-
-      migrate_files = glob.glob(os.path.join(path_to_db, '*.test.migrate'))
-      for file in migrate_files:
-          os.unlink(file)
-
-      TestContext.db_context = None
-
+from applications.notes.modules.tests.db_test_module import TestDBContext
 
 class CoursesAccessorTest(unittest.TestCase):
     def setUp(self):
-        self.access_course = CoursesAccessor(TestContext.db_context)
+        self.db_context = TestDBContext.db_context
+        self.access_course = CoursesAccessor(self.db_context)
 
     def testConstructor(self):
         assert self.access_course is not None
@@ -78,7 +49,8 @@ class CoursesAccessorTest(unittest.TestCase):
 
 class NotesAccessorTest(unittest.TestCase):
     def setUp(self):
-        self.access_note = NotesAccessor(TestContext.db_context)
+        self.db_context = TestDBContext.db_context
+        self.access_note = NotesAccessor(self.db_context)
 
     def testConstructor(self):
         assert self.access_note is not None
@@ -116,19 +88,35 @@ class NotesAccessorTest(unittest.TestCase):
         assert len(course_notes) > 0
         assert len(course_notes) < len(all_notes)
 
-def run(suite_class):
-    print "Running ", suite_class
-    TestContext.begin()
-    suite = unittest.TestLoader().loadTestsFromTestCase(suite_class);
-    runner = unittest.TextTestRunner()
-    runner.run(suite)
-    TestContext.end()
-    print "-" * 20
+
+class DAOTests(unittest.TestCase):
+    def setUp(self):
+        TestDBContext.init_db()
+
+    def tearDown(self):
+        TestDBContext.wipe_db()
+
+    def testDAO(self, classname=None):
+        # simple hack to skip test when called by unit test
+        # TODO: is there a better way to exclude this test?
+        if not classname:
+            return
+        suite = unittest.TestLoader().loadTestsFromTestCase(classname)
+        runner = unittest.TextTestRunner()
+        runner.run(suite)
+
+    def testCourseDAO(self):
+        self.testDAO(CoursesAccessorTest)
+
+    def testNoteDAO(self):
+        self.testDAO(NotesAccessorTest)
+
 
 # entry point
 def main():
-    run(CoursesAccessorTest)
-    run(NotesAccessorTest)
+  suite = unittest.TestLoader().loadTestsFromTestCase(DAOTests);
+  runner = unittest.TextTestRunner()
+  runner.run(suite)
 
 
 # run main

@@ -22,7 +22,7 @@ mail.settings.login = 'username:password'      		  # your credentials or None
 # setup auth object for allowing users to register/login
 auth = Auth(globals(),db)                      # object with handles authentication
 auth.settings.hmac_key = 'sha512:88c35b00-2555-4e6f-b79d-063d724706f7' # set private key for hmac in the application
-
+auth.settings.table_user_name = db_context.USER_TABLE
 auth.settings.table_user = db.users
 auth.define_tables()                           # creates all needed tables that we haven't defined yet
 auth.settings.mailer = mail                    # for user email verification, turned off for now
