@@ -145,7 +145,7 @@ class EnrollmentsAccessorTest(unittest.TestCase):
 
     def testUserEnrollments(self):
         id = self.access_enrollment.insert_enrollment(Enrollment(10, 30))
-        assert len(self.access_enrollment.get_user_enrollments(1)) > 0
+        assert len(self.access_enrollment.get_user_enrollments(10)) > 0
 
 class DAOTests(unittest.TestCase):
     def setUp(self):
