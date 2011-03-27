@@ -6,7 +6,7 @@ from gluon.contrib.populate import populate
 
 from applications.notes.modules.db.base import DBContext
 
-class TestDBContext(DBContext):
+class TestDBContext:
     """ Class to handle setting up / destroying test database context """
     init = 0
     db_context = None
