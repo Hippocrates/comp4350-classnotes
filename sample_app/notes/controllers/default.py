@@ -35,6 +35,9 @@ def courses():
     """
     Controller for editing (add, remove, edit) courses
     """
+    if authed_user == None or authed_user.role != User.ROLE_ADMIN:
+      session.flash = T('You are not authorized to view that page');
+      redirect(URL('index'));
     
     form = FORM( TABLE(
             TR("Department: ", INPUT(_type='text', _name='dept', requires=IS_NOT_EMPTY())),
@@ -57,35 +60,42 @@ def courses():
     return dict(courses=courses, form=form);
 
 def add_notes():
-        """
-        demo of building a form from the database model
-        and accepting values from it
-        """
-        form = FORM( TABLE(
-            TR("Department: ", INPUT(_type='text', _name='dept', requires=IS_NOT_EMPTY())),
-            TR("Course Number: ", INPUT(_type='text', _name='number', requires=IS_NOT_EMPTY())),
-            TR("Section: ", INPUT(_type='text', _name='section')),
-            TR("Start Date: ", INPUT(_class='date', _type='date', _name='start_date', requires=[IS_NOT_EMPTY(),IS_DATE()])),
-            TR("End Date: ", INPUT(_class='date', _type='date', _name='end_date', requires=[IS_NOT_EMPTY(),IS_DATE()])),
-            TR("Notes file (.pdf only): ", INPUT(_type='file', _name='upload', requires=IS_UPLOAD_FILENAME(extension='pdf'))),
-            TR(INPUT(_type='submit', _name='submit')))
-        )
-        
-        if form.accepts(request.vars, session, formname='AddForm', keepvalues=True):
-          noteId = SubmitNote(access_course,access_note).submit_note(form.vars.start_date, form.vars.end_date, form.vars.upload, 1, form.vars.dept, form.vars.number, form.vars.section);
-          if noteId != None:
+    """
+    demo of building a form from the database model
+    and accepting values from it
+    """
+    if authed_user == None or (authed_user.role != User.ROLE_SUBMITTER and authed_user.role != User.ROLE_ADMIN):
+      session.flash = T('You are not authorized to view that page');
+      redirect(URL('index'));
+
+    form = FORM( TABLE(
+        TR("Department: ", INPUT(_type='text', _name='dept', requires=IS_NOT_EMPTY())),
+        TR("Course Number: ", INPUT(_type='text', _name='number', requires=IS_NOT_EMPTY())),
+        TR("Section: ", INPUT(_type='text', _name='section')),
+        TR("Start Date: ", INPUT(_class='date', _type='date', _name='start_date', requires=[IS_NOT_EMPTY(),IS_DATE()])),
+        TR("End Date: ", INPUT(_class='date', _type='date', _name='end_date', requires=[IS_NOT_EMPTY(),IS_DATE()])),
+        TR("Notes file (.pdf only): ", INPUT(_type='file', _name='upload', requires=IS_UPLOAD_FILENAME(extension='pdf'))),
+        TR(INPUT(_type='submit', _name='submit')))
+    )
+
+    if form.accepts(request.vars, session, formname='AddForm', keepvalues=True):
+        #TODO: check that the target course is allowed for user (or provide drop-down for user)
+        noteId = SubmitNote(access_course,access_note).submit_note(form.vars.start_date, form.vars.end_date, form.vars.upload, authed_user.id, form.vars.dept, form.vars.number, form.vars.section);
+        if noteId != None:
             response.flash = 'Added note with ID: ' + str(noteId); 
-          else:
-            response.flash = 'Failed to add note';
-          #TODO: grab User ID, replace the 1 above
-                                          
-                                          
-        return dict(form=form)
+    elif form.errors:
+        response.flash = 'Failed to add note';                  
+
+    return dict(form=form)
 
 def search_notes():
     """
     Search page, uses a custom FORM object
     """
+    if authed_user == None:
+      session.flash = T('You are not authorized to view that page');
+      redirect(URL('index'));
+      
     form = FORM( TABLE(
         TR("Department ID: ", INPUT(_type='text', _name='dept', requires=IS_NOT_EMPTY())),
         TR("Course Number: ", INPUT(_type='text', _name='number', requires=IS_NOT_EMPTY())),
@@ -100,7 +110,6 @@ def search_notes():
         courseParams = CourseSearchParams(form.vars.dept, form.vars.number, form.vars.section, form.vars.instructor);
         noteParams = NoteSearchParams();
         searchResult = Searcher(access_course,access_note).search_notes(courseParams, noteParams);
-        
     elif form.errors:
         response.flash = 'At least the department code and the course number are required';
         
@@ -110,7 +119,12 @@ def create_user():
     """
     Admin page to add a user to the system with a given role
     """
-    roles = User.list_roles();
+    if authed_user == None or authed_user.role != User.ROLE_ADMIN:
+      session.flash = T('You are not authorized to view that page');
+      redirect(URL('index'));
+
+    roleTable = {'Consumer':User.ROLE_CONSUMER, 'Submitter':User.ROLE_SUBMITTER, 'Administrator':User.ROLE_ADMIN}
+    roles = roleTable.keys();
     
     form = FORM( TABLE(
         TR("Login Name: ", INPUT(_type='text', _name='username', requires=IS_NOT_EMPTY())), # possibly 'IS_SLUG()' as well
@@ -123,7 +137,7 @@ def create_user():
     )
 
     if form.accepts(request.vars, session, formname='CreateForm', keepvalues=False):
-        response.flash = 'Successfully added user %s with role #%d' % (request.vars['username'], User.get_role_id(request.vars['role']))
+        response.flash = 'Successfully added user %s with role #%d, or I would if I could...' % (request.vars['username'], roleTable[request.vars['role']])
     elif form.errors:
         response.flash = 'Some fields were not entered correctly'
 
@@ -137,6 +151,10 @@ def user_admin():
       userId = request.args[0];
     else:
       session.flash = T('invalid request');
+      redirect(URL('index'));
+
+    if authed_user == None or authed_user.role != User.ROLE_ADMIN:
+      session.flash = T('You are not authorized to view that page');
       redirect(URL('index'));
 
     coursesForm = FORM( TABLE(
@@ -163,6 +181,12 @@ def user_admin():
     elif coursesForm.errors:
         response.flash = 'Error in your course request';
 
+    deleteUserForm = FORM("Delete this user? ", INPUT(_type='submit', _name='submit'));
+
+    if deleteUserForm.accepts(request.vars, session, formname="DeleteUserForm"):
+        session.flash = 'User %s deleted' % (userId);
+        redirect(URL('index'));
+
     if request.vars.remove_course != None:
         # remove a course from this user with the given id
         response.flash = 'removed course %s from user (assuming it was there in the first place)' % (request.vars.remove_course);
@@ -171,7 +195,28 @@ def user_admin():
         # same idea
         response.flash = 'inserted course %s to user (assuming it wasnt already there in the first place)' % (request.vars.insert_course);
 
-    return dict(userCourses=userCourses,coursesForm=coursesForm,possibleCourses=possibleCourses);
+    return dict(userCourses=userCourses,coursesForm=coursesForm,deleteUserForm=deleteUserForm,possibleCourses=possibleCourses);
+
+def note_admin():
+    """
+    A control page to deal with note objects
+    currently a WIP
+    """
+    if len(request.args) == 1:
+      noteId = request.args[0];
+    else:
+      session.flash = T('invalid request');
+      redirect(URL('index'));
+
+    if authed_user == None or (authed_user.role != User.ROLE_SUBMITTER and authed_user.role != User.ROLE_ADMIN):
+      session.flash = T('You are not authorized to view that page');
+      redirect(URL('index'));
+
+    note = access_note.get_note(noteId);
+
+    #Todo: do stuff
+
+    return dict(note=note);
 
 def loremipsum():
     """ dummy page """
