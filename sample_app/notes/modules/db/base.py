@@ -4,6 +4,7 @@ from gluon.dal import DAL, Field
 import os
 
 from ..logic.objects.user import User
+from .access.users import UsersAccessor
 
 class DBContext:
     """ context for the database on web2py 
@@ -38,10 +39,10 @@ class DBContext:
             self.USER_TABLE,
             Field('first_name', length=128, default='', requires=IS_NOT_EMPTY()),
             Field('last_name', length=128, default='', requires=IS_NOT_EMPTY()),
-            Field('username', length=32, default='', requires=IS_NOT_EMPTY()),
+            Field('username', length=32, default='', unique=True, requires=IS_NOT_EMPTY()),
             Field('email', length=128, default='', unique=True),
             Field('password', 'password', length=512, readable=False, label='Password', requires=[CRYPT()]), # IS_STRONG()?
-            Field('role', 'integer', writable=False, default=User.MIN_ROLE, requires=IS_INT_IN_RANGE(User.MIN_ROLE, User.MAX_ROLE)),
+            Field('role', 'integer', writable=False, default=User.MIN_ROLE, requires=IS_INT_IN_RANGE(User.MIN_ROLE, User.MAX_ROLE + 1)),
 
             # these fields are unused, but kept for compatibility with web2py
             Field('registration_key', length=512, writable=False, readable=False, default=''),
