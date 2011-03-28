@@ -1,6 +1,8 @@
 from ...search.submit_note import SubmitNote
 from ....db.access.course_stub import CourseAccessorStub
 from ....db.access.note_stub import NoteAccessorStub
+from ....db.access.users_stub import UsersAccessorStub
+from ....db.access.enrollments_stub import EnrollmentsAccessorStub
 
 from datetime import date
 
@@ -15,15 +17,17 @@ class SubmitNoteTest(unittest.TestCase):
     def setUp(self):
         self.access_course = CourseAccessorStub();
         self.access_note = NoteAccessorStub()
-        self.submiter = SubmitNote(self.access_course, self.access_note);
+        self.access_user = UsersAccessorStub();
+        self.access_enrollment = EnrollmentsAccessorStub();
+        self.submiter = SubmitNote(self.access_course, self.access_note, self.access_user, self.access_enrollment);
 
     def testSubmit(self):
         department = "COMP";
-        number = "1020";
+        number = "1010";
         section = "A01";
         startDate = date(2011, 01, 01);
         endDate = date(2011, 01, 03);
-        userId = 1;
+        userId = 3;
         filename = "some_fake_file.pdf";
         fileObject = DummyFileUpload(None, filename);
         submit_result = self.submiter.submit_note(
@@ -34,10 +38,10 @@ class SubmitNoteTest(unittest.TestCase):
 
     def testSubmitImplicitSection(self):
         department = "COMP";
-        number = "1020";
+        number = "1010";
         startDate = date(2011, 01, 01);
         endDate = date(2011, 01, 03);
-        userId = 1;
+        userId = 3;
         filename = "some_fake_file.pdf";
         fileObject = DummyFileUpload(None, filename);
         submit_result = self.submiter.submit_note(

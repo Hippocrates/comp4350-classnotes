@@ -80,7 +80,7 @@ def add_notes():
 
     if form.accepts(request.vars, session, formname='AddForm', keepvalues=True):
         #TODO: check that the target course is allowed for user (or provide drop-down for user)
-        noteId = SubmitNote(access_course,access_note).submit_note(form.vars.start_date, form.vars.end_date, form.vars.upload, authed_user.id, form.vars.dept, form.vars.number, form.vars.section);
+        noteId = SubmitNote(access_course,access_note,access_user,access_enrollment).submit_note(form.vars.start_date, form.vars.end_date, form.vars.upload, authed_user.id, form.vars.dept, form.vars.number, form.vars.section);
         if noteId != None:
             response.flash = 'Added note with ID: ' + str(noteId); 
     elif form.errors:

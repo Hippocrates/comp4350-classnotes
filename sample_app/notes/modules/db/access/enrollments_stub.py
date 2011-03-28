@@ -15,7 +15,7 @@ class EnrollmentsAccessorStub:
                 Enrollment(1, 1, 1),
                 Enrollment(1, 2, 2),
                 Enrollment(2, 1, 3),
-                Enrollment(2, 2, 4)
+                Enrollment(3, 1, 4)
         ]
 
 
