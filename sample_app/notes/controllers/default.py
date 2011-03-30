@@ -128,7 +128,7 @@ def create_user():
     
     form = FORM( TABLE(
         TR("Login Name: ", INPUT(_type='text', _name='username', requires=IS_NOT_EMPTY())), # possibly 'IS_SLUG()' as well
-        TR("User Type: ", SELECT(*roles, _name='role', requires=IS_IN_SET(roles))),
+        TR("User Type: ", SELECT('*roles', _name='role', requires=IS_IN_SET(roles))),
         TR("Default Password: ", INPUT(_type='text', _name='password', requires=IS_NOT_EMPTY())),
         TR("Last Name: ", INPUT(_type='text', _name='last_name', requires=IS_NOT_EMPTY())),
         TR("First Name: ", INPUT(_type='text', _name='first_name', requires=IS_NOT_EMPTY())),
