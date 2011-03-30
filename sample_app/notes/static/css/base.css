@@ -438,8 +438,8 @@ body
 {
   margin: 0;
   font-size: 150%;
-  background-color: rgb(91, 0, 152);
-  color: rgb(2, 240, 244);
+  background-color: white;
+  color: rgb(2, 200, 200);
   padding: 0.5em;
   padding-left: 1em;
 }
@@ -451,11 +451,11 @@ body
 
 #header A:link, #header A:visited
 {
-  color: #99e;
+  color: #77e;
 }
 #header A:hover
 {
-  color: #AAF;
+  color: #88f;
 }
 
 #page A:link, #page A:visited
