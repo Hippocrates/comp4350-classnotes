@@ -438,8 +438,10 @@ body
 {
   margin: 0;
   font-size: 150%;
-  background-color: white;
-  color: rgb(2, 200, 200);
+  
+  background-color: rgb(86, 64, 149);
+  
+  color: #ddd;
   padding: 0.5em;
   padding-left: 1em;
 }
