@@ -47,7 +47,7 @@ class EnrollmentsAccessor:
         temp_enrollment_list = self.db(self.db.enrollments.user_id == user_id).select().as_list()
         enrollment_list = []
         for row in temp_enrollment_list:
-            enrollment = Enrollment( row['id'],
+            enrollment = Enrollment( row['user_id'],
                                      row['course_id'],
                                      row['id'] )
             enrollment_list.append(enrollment)

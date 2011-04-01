@@ -16,12 +16,15 @@
         <td><a href="?remove_course={{=course.id}}">Remove course</a></td>
     </tr>
   {{ pass }}
+  </table>
 {{else:}}
   No courses have been registered to this user yet.
 {{ pass }}
 
+{{=BEAUTIFY(coursesForm)}}
+
 {{if possibleCourses != None:}}
-  <h2>Did you mean?</h2>
+  <h3>Did you mean?</h3>
   <table id="possibleCourses">
     <tr>
       <th>Department</th>
@@ -37,9 +40,8 @@
         <td><a href="?insert_course={{=course.id}}">Insert course</a></td>
     </tr>
   {{ pass }}
+  </table>
 {{ pass }}
-
-{{=BEAUTIFY(coursesForm)}}
 
 {{=BEAUTIFY(deleteUserForm)}}
 

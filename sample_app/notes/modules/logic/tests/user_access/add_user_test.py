@@ -1,13 +1,17 @@
 from ....db.access.users_stub import UsersAccessorStub
+from ....db.access.enrollments_stub import EnrollmentsAccessorStub
+from ....db.access.course_stub import CourseAccessorStub
 from ...objects.user import User
-from ...user_access.user_access import UsersAccess
+from ...user_access.user_control import UserControl
 import unittest;
 
 
 class UsersAccessTest(unittest.TestCase):
     def setUp(self):
         self.access_user = UsersAccessorStub();
-        self.user_access = UsersAccess(self.access_user);
+        self.access_enrollements = EnrollmentsAccessorStub();
+        self.access_course = CourseAccessorStub();
+        self.user_control = UserControl(self.access_user);
 
     def testSubmitUser(self):
         username = 'umtester'
@@ -17,9 +21,9 @@ class UsersAccessTest(unittest.TestCase):
         first_name = 'tester'
         role = User.ROLE_CONSUMER
         id = None
-        id = self.user_access.insert_user(username,role,email,password,last_name,first_name)
+        id = self.user_control.insert_user(username,role,email,password,last_name,first_name)
         if id != None:
-            returned_user = self.user_access.get_user(id)
+            returned_user = self.user_control.get_user(id)
             self.assertTrue(returned_user.username == username)
         
 
@@ -31,19 +35,19 @@ class UsersAccessTest(unittest.TestCase):
         first_name = 'tester'
         role = User.ROLE_CONSUMER
         id = None
-        id = self.user_access.insert_user(username,role,email,password,last_name,first_name)
+        id = self.user_control.insert_user(username,role,email,password,last_name,first_name)
         self.assertTrue(id != None)
-        user = self.user_access.get_user(id)
+        user = self.user_control.get_user(id)
         self.assertTrue(user != None)
         user.username = 'umtester2'
-        self.user_access.update_user(user)
-        returned_user = self.user_access.get_user(id)
+        self.user_control.update_user(user)
+        returned_user = self.user_control.get_user(id)
         self.assertTrue(returned_user.username == 'umtester2')
 
     def testDeleteUser(self):
-        self.assertTrue(self.user_access.get_user(1) != None)
-        self.assertTrue(self.user_access.delete_user(1))
-        self.assertTrue(self.user_access.get_user(1) == None)
+        self.assertTrue(self.user_control.get_user(1) != None)
+        self.assertTrue(self.user_control.delete_user(1))
+        self.assertTrue(self.user_control.get_user(1) == None)
 
 
     @staticmethod

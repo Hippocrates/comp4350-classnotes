@@ -17,6 +17,9 @@ NoteSearchParams=local_import('logic/search/note_search_params', rebuildImports)
 SubmitNote = local_import('logic/search/submit_note', rebuildImports).SubmitNote;
 EditCourses = local_import('logic/search/edit_courses', rebuildImports).EditCourses;
 User = local_import('logic/objects/user', rebuildImports).User;
+UserControl = local_import('logic/user_access/user_control', rebuildImports).UserControl;
+
+
 
 def index():
     """
@@ -79,10 +82,11 @@ def add_notes():
     )
 
     if form.accepts(request.vars, session, formname='AddForm', keepvalues=True):
-        #TODO: check that the target course is allowed for user (or provide drop-down for user)
-        noteId = SubmitNote(access_course,access_note,access_user,access_enrollment).submit_note(form.vars.start_date, form.vars.end_date, form.vars.upload, authed_user.id, form.vars.dept, form.vars.number, form.vars.section);
+        noteId = SubmitNote(access_course,access_note,access_user,access_enrollment).submit_note(form.vars.start_date, form.vars.end_date, form.vars.upload, authed_user.user_id, form.vars.dept, form.vars.number, form.vars.section);
         if noteId != None:
-            response.flash = 'Added note with ID: ' + str(noteId); 
+            response.flash = 'Added note with ID: ' + str(noteId);
+        else:
+            response.flash = 'You are not authorized to submit notes for that course';
     elif form.errors:
         response.flash = 'Failed to add note';                  
 
@@ -106,10 +110,14 @@ def search_notes():
 
     searchResult = None;
 
+    userControl = UserControl(access_user, access_enrollment, access_course);
+
     if form.accepts(request.vars, session, formname='SearchForm', keepvalues=True):
         courseParams = CourseSearchParams(form.vars.dept, form.vars.number, form.vars.section, form.vars.instructor);
         noteParams = NoteSearchParams();
         searchResult = Searcher(access_course,access_note).search_notes(courseParams, noteParams);
+        userCourses = userControl.get_user_courses(authed_user.user_id);
+        searchResult = filter(lambda note: note.course_id in userCourses or authed_user.role == User.ROLE_ADMIN, searchResult);
     elif form.errors:
         response.flash = 'At least the department code and the course number are required';
         
@@ -128,7 +136,7 @@ def create_user():
     
     form = FORM( TABLE(
         TR("Login Name: ", INPUT(_type='text', _name='username', requires=IS_NOT_EMPTY())), # possibly 'IS_SLUG()' as well
-        TR("User Type: ", SELECT('*roles', _name='role', requires=IS_IN_SET(roles))),
+        TR("User Type: ", SELECT(*roles, _name='role', requires=IS_IN_SET(roles))),
         TR("Default Password: ", INPUT(_type='text', _name='password', requires=IS_NOT_EMPTY())),
         TR("Last Name: ", INPUT(_type='text', _name='last_name', requires=IS_NOT_EMPTY())),
         TR("First Name: ", INPUT(_type='text', _name='first_name', requires=IS_NOT_EMPTY())),
@@ -137,7 +145,19 @@ def create_user():
     )
 
     if form.accepts(request.vars, session, formname='CreateForm', keepvalues=False):
-        response.flash = 'Successfully added user %s with role #%d, or I would if I could...' % (request.vars['username'], roleTable[request.vars['role']])
+        userControl = UserControl(access_user, access_enrollment, access_course);
+        passWordHash,errors = CRYPT()(request.vars['password']);
+        created = userControl.create_user(
+            request.vars['username'],
+            roleTable[request.vars['role']],
+            request.vars['email'],
+            passWordHash,
+            request.vars['last_name'],
+            request.vars['first_name']);
+        if created:
+            response.flash = 'Successfully added user %s' % (request.vars['username'])
+        else:
+            response.flash = 'Could not create user!';
     elif form.errors:
         response.flash = 'Some fields were not entered correctly'
 
@@ -148,7 +168,7 @@ def user_admin():
     A control page for administrators
     """
     if len(request.args) == 1:
-      userId = request.args[0];
+      userId = int(request.args[0]);
     else:
       session.flash = T('invalid request');
       redirect(URL('index'));
@@ -165,8 +185,12 @@ def user_admin():
         TR(INPUT(_type='submit', _name='submit')))
     )
 
+    userControl = UserControl(access_user, access_enrollment, access_course);
     possibleCourses = None;
-    userCourses = []; # this is where I would search for user's courses
+
+    if userControl.get_user(userId) == None:
+        session.flash = T('User %d does not exist' % (userId));
+        redirect(URL('index'));
 
     if coursesForm.accepts(request.vars, session, formname='CoursesForm', keepvalues=True):
         courseParams = CourseSearchParams(coursesForm.vars.dept, coursesForm.vars.number, coursesForm.vars.section, coursesForm.vars.instructor);
@@ -176,24 +200,36 @@ def user_admin():
         elif len(searchResult) > 1:
             possibleCourses = searchResult;
         else:
-            response.flash = 'Good enough...'
-            # I can't decide whether it would be better to do this directly, or via a post...
+            request.vars.insert_course = searchResult[0].id;
     elif coursesForm.errors:
         response.flash = 'Error in your course request';
 
     deleteUserForm = FORM("Delete this user? ", INPUT(_type='submit', _name='submit'));
 
     if deleteUserForm.accepts(request.vars, session, formname="DeleteUserForm"):
-        session.flash = 'User %s deleted' % (userId);
+        userControl.delete_user(userId);
+        session.flash = 'User %d deleted' % (userId);
         redirect(URL('index'));
+    elif deleteUserForm.errors:
+        session.flash = 'Could not delete user %d' % (userId);
 
     if request.vars.remove_course != None:
-        # remove a course from this user with the given id
-        response.flash = 'removed course %s from user (assuming it was there in the first place)' % (request.vars.remove_course);
+        removed = userControl.remove_user_enrollment(userId, int(request.vars.remove_course));
+        if removed:
+            session.flash = 'removed course %s from user' % (request.vars.remove_course);
+        else:
+            session.flash = 'user was not enrolled in this course';
+        redirect(URL('user_admin/%d' % userId))
 
     if request.vars.insert_course != None:
-        # same idea
-        response.flash = 'inserted course %s to user (assuming it wasnt already there in the first place)' % (request.vars.insert_course);
+        added = userControl.add_user_enrollment(userId, int(request.vars.insert_course));
+        if added:
+            session.flash = 'added course %s to user' % (request.vars.insert_course);
+        else:
+            session.flash = 'user is already registered to this course';
+        redirect(URL('user_admin/%d' % userId))
+
+    userCourses = userControl.get_user_courses(userId);
 
     return dict(userCourses=userCourses,coursesForm=coursesForm,deleteUserForm=deleteUserForm,possibleCourses=possibleCourses);
 

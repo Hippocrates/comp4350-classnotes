@@ -1,7 +1,8 @@
 from ..objects.note import Note
-from ..user_access.user_rights import UserRights
+from ..user_access.user_control import UserControl
 from searcher import Searcher
 from course_search_params import CourseSearchParams
+from ..objects.user import User
 
 from datetime import date, datetime
 
@@ -21,7 +22,10 @@ class SubmitNote:
 
         # eventually, this should cross-check with the courses the given user is allowed to submit for
 
-        if len(possible_courses) == 1 and UserRights(self.access_user, self.access_enrollment).check_access_rights(user_id, possible_courses[0].id) == True:
+        userControl = UserControl(self.access_user, self.access_enrollment, self.access_course)
+        user = userControl.get_user(user_id);
+        
+        if len(possible_courses) == 1 and (user.role == User.ROLE_ADMIN or (user.role == User.ROLE_SUBMITTER and userControl.is_user_enrolled(user_id, possible_courses[0].id) == True)):
 		    notesUploadFile = self.access_note.store_notes_file(notes.file, notes.filename);
             
 		    note = Note(start_date, end_date, notesUploadFile, possible_courses[0].id, user_id, datetime.now());
