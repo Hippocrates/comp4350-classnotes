@@ -5,20 +5,14 @@
 {{=BEAUTIFY(form)}}
 
 {{if results != None:}}
-
   {{if len(results) > 0:}}
     {{ for note in results: }}
-
-      <h3><!--Course: {{=note.course.dept}}{{=note.course.number}}, Section: {{=note.course.section}}<br>-->
-        From {{=note.start_date}} to {{=note.end_date}}</h3>
-        Submitted By: {{=note.created_by}} <br>
+      <h3>{{=A("Notes", _href="note_info/%d"%(note.id))}} from {{=note.start_date}} to {{=note.end_date}} <br>Course: {{=note.course.dept}}{{=note.course.number}}, Section: {{=note.course.section}}</h3>
+        Submitted By: {{=A(note.submitter.username, _href="user_info/%d"%(note.created_by))}} <br>
         Last Modified: {{=note.modified_on}} <br>
         Download: {{=A("Download", _href=URL(r=request, f='download', args=[note.notes]))}} <br> <br>
-
     {{pass}}
-
   {{else:}}
     <h3>No notes were found that matched your search, please try again.</h3>
   {{ pass }}
-
 {{pass}}

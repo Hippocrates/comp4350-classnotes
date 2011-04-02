@@ -3,11 +3,10 @@ from ..objects.enrollment import Enrollment
 
 class UserControl:
     """The following can be used to check user access rights"""
-    def __init__(self, access_user, access_enrollment, access_course):
+    def __init__(self, access_user, access_enrollment):
         """ to initialize a user access instance"""
         self.access_user = access_user;
         self.access_enrollment = access_enrollment;
-        self.access_course = access_course;
 
     def get_user(self, id):
         user = self.access_user.get_user(id)
@@ -15,7 +14,7 @@ class UserControl:
 
     def create_user(self,username,role,email,password,last_name,first_name):
         id=self.access_user.insert_user(User(username, role, email, password, last_name, first_name))
-        return id != None
+        return id
 
     def update_user(self,user):
         result = None
@@ -51,11 +50,26 @@ class UserControl:
                 return True;
         return False;
 
+    def can_view_note(self, user, note):
+        if user == None:
+            return False;
+        elif user.role == User.ROLE_CONSUMER:
+            return (note.course_id in self.get_user_courses(user.user_id));
+        else:
+            return self.can_admin_note(user, note);
+
+    def can_admin_note(self, user, note):
+        if user == None or user.role == User.ROLE_CONSUMER:
+            return False;
+        elif user.role == User.ROLE_ADMIN:
+            return True;
+        elif user.role == User.ROLE_SUBMITTER:
+            return note.created_by == user.user_id;
+        else:
+            return False;
+
     def get_user_courses(self, user_id):
         enrollment_list = self.access_enrollment.get_user_enrollments(user_id);
-        course_list = [];
-        for enrollment in enrollment_list:
-            course_list.append(self.access_course.get_course(enrollment.course_id));
-        return course_list;
+        return map(lambda enrollment: enrollment.course_id, enrollment_list);
 		
 		

@@ -74,8 +74,8 @@ class DBContext:
             Field('end_date', 'date', requires=[IS_NOT_EMPTY(),IS_DATE()]),
             Field(self.NOTE_TABLE, 'upload', autodelete=True, requires=IS_NOT_EMPTY()), # must do autodelete to avoid polluting the db with old files
             Field('course_id', self.db.courses, requires=IS_NOT_EMPTY()), # foreign key relationship
-            Field('created_by', 'integer'), # eventually make this a foreign key on user table
-            Field('modified_by', 'integer'), # ditto
+            Field('created_by', self.db.users, 'integer'), # eventually make this a foreign key on user table
+            Field('modified_by', self.db.users, 'integer'), # ditto
             Field('created_on', 'datetime'),
             Field('modified_on', 'datetime'),
             migrate=self.migrate(self.NOTE_TABLE)

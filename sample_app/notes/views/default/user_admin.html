@@ -1,6 +1,6 @@
 {{extend 'layout.html'}}
 
-{{if len(userCourses) != 0:}}
+{{if userCourses != None and len(userCourses) != 0:}}
   <table id="courselist">
     <tr>
       <th>Department</th>

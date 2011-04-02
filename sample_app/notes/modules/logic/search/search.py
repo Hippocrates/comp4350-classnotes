@@ -54,5 +54,28 @@ def filter_note_list(noteList, noteSearchParams):
         result = filter(lambda note: note_created_before_filter(note, noteSearchParams.submittedBefore), result);
     if noteSearchParams.targetDate != None:
         result = filter(lambda note: note_range_filter(note, noteSearchParams.targetDate), result);
+    if noteSearchParams.targetUsers != None:
+        result = filter(lambda note: note_user_filter(note, noteSearchParams.targetUsers), result);
+    
+    return result;
+
+def user_name_filter(user, userName):
+    return fuzzy_search(user.username, userName);
+
+def user_firstname_filter(user, firstName):
+    return fuzzy_search(user.first_name, firstName);
+
+def user_lastname_filter(user, lastName):
+    return fuzzy_search(user.last_name, lastName);
+
+def filter_user_list(userList, userSearchParams):
+    result = userList;
+
+    if userSearchParams.targetUserName != None and len(userSearchParams.targetUserName) > 0:
+        result = filter(lambda user: user_name_filter(user, userSearchParams.targetUserName), result);
+    if userSearchParams.targetFirstName != None and len(userSearchParams.targetFirstName) > 0:
+        result = filter(lambda user: user_firstname_filter(user, userSearchParams.targetFirstName), result);
+    if userSearchParams.targetLastName != None and len(userSearchParams.targetLastName) > 0:
+        result = filter(lambda user: user_lastname_filter(user, userSearchParams.targetLastName), result);
     
     return result;
