@@ -1,0 +1,8 @@
+{{extend 'layout.html'}}
+
+Username: {{=user.username}} <br>
+Real Name: {{=user.first_name}} {{=user.last_name}} <br>
+
+{{if canAdminUser:}}
+  {{=A("Click Here to Perform User Administration", _href=URL("user_admin/%d" % (user.user_id)))}}
+{{pass}}

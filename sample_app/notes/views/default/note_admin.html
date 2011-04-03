@@ -1,0 +1,12 @@
+{{extend 'layout.html'}}
+
+Start Date: {{=note.start_date}} <br>
+End Date: {{=note.end_date}} <br>
+Course: {{=note.course.dept}}{{=note.course.number}} <br>
+Section: {{=note.course.section}} <br>
+Instructor: {{=note.course.instructor}} <br>
+{{=A("Download", _href=URL(r=request, f='download', args=[note.notes]))}} <br>
+
+{{=deleteNoteForm}}
+
+{{=A("Go back to note info page", _href=URL("note_info/%d" % (note.id)))}}

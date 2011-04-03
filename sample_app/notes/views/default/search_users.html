@@ -1,0 +1,15 @@
+{{extend 'layout.html'}}
+
+<h2>Search Users</h2>
+
+{{=BEAUTIFY(form)}}
+
+{{if possibleUsers != None:}}
+  {{if len(possibleUsers) > 0:}}
+    {{for user in possibleUsers:}}
+      {{=A(user.username, _href="user_info/%d"%(user.user_id))}}<br>
+    {{pass}}
+  {{else:}}
+    No users were found that matched your request.
+  {{pass}}
+{{pass}}
