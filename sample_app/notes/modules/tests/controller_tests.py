@@ -51,15 +51,15 @@ class ControllerTests(unittest.TestCase):
   # this is a helper method to grab the form name and form key
   # from a post form, so that we can actually submit
   # it takes a dictionary of the form inputs to be specified
-  def makePostVars(self,**kwargs):
-    emptyResult = search_notes();
-    kwargs['_formkey'] = emptyResult['form'].formkey;
-    kwargs['_formname'] = emptyResult['form'].formname;
+  def makePostVars(self, page, formId, **kwargs):
+    emptyResult = page();
+    kwargs['_formkey'] = emptyResult[formId].formkey;
+    kwargs['_formname'] = emptyResult[formId].formname;
     print(emptyResult['form'].formname);
     return Storage(kwargs);
 
   def testSearchPost(self):
-    request.vars = self.makePostVars(dept='comp',number='1020');
+    request.vars = self.makePostVars(page = search_notes, formId = 'form', dept='comp',number='1020');
     request.env.request_method = 'POST';
     
     result = search_notes();
@@ -72,7 +72,7 @@ class ControllerTests(unittest.TestCase):
 
   def testFailedSearchPost(self):
     # just submit some random crap that will not be accepted
-    request.vars = self.makePostVars(email='ddd');
+    request.vars = self.makePostVars(page = search_notes, formId = 'form', email='ddd');
     request.env.request_method = 'POST';
 
     result = search_notes();
@@ -85,7 +85,7 @@ class ControllerTests(unittest.TestCase):
     
   def testSearch(self):
     #try finding a note added directly to the the DB
-    request.vars = self.makePostVars(dept='comp',number='1020');
+    request.vars = self.makePostVars(page = search_notes, formId = 'form', dept='comp',number='1020');
     request.env.request_method = 'POST';
     
     aNote = access_note.make_note_stub(0, datetime(1337, 1, 1), 1020, "user");
