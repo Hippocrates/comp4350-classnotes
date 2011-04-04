@@ -21,9 +21,9 @@ class SubmitNote:
     def submit_note(self, start_date, end_date, notes, user_id, department, number, section=None):
         possible_courses = self.searcher.search_courses(CourseSearchParams(department=department, number=number, section=section));
 
-        user = self.userControl.get_user(user_id);
+        user = self.access_user.get_user(user_id);
         
-        if len(possible_courses) == 1 and (user.role == User.ROLE_ADMIN or (user.role == User.ROLE_SUBMITTER and userControl.is_user_enrolled(user_id, possible_courses[0].id) == True)):
+        if len(possible_courses) == 1 and (user.role == User.ROLE_ADMIN or (user.role == User.ROLE_SUBMITTER and self.userControl.is_user_enrolled(user_id, possible_courses[0].id) == True)):
 		    notesUploadFile = self.access_note.store_notes_file(notes.file, notes.filename);
             
 		    note = Note(start_date, end_date, notesUploadFile, possible_courses[0].id, user_id, datetime.now());
@@ -33,6 +33,14 @@ class SubmitNote:
         else:
             # was not able to submit note
             return None;
+
+    def update_note_file(self, note_id, user_id, notes):
+        user = self.access_user.get_user(user_id);
+        note = self.access_note.get_note(note_id);
+        note.notes = self.access_note.store_notes_file(notes.file, notes.filename);
+        note.modified_by = user_id;
+        note.modified_on = datetime.now();
+        return self.access_note.update_note(note);
 
     def remove_note(self, note_id):
         return self.access_note.delete_note(note_id);

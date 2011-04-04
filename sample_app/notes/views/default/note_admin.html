@@ -7,6 +7,8 @@ Section: {{=note.course.section}} <br>
 Instructor: {{=note.course.instructor}} <br>
 {{=A("Download", _href=URL(r=request, f='download', args=[note.notes]))}} <br>
 
+{{=changeFileForm}}
+
 {{=deleteNoteForm}}
 
 {{=A("Go back to note info page", _href=URL("note_info/%d" % (note.id)))}}

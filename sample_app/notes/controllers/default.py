@@ -338,8 +338,7 @@ def note_info():
         session.flash = T('You are not authorized to view that page');
         redirect(URL('index'));
 
-    canUserAdminNote = userControl.can_admin_note(authed_user, noteId);
-    note = searcher.get_note(noteId);
+    canUserAdminNote = userControl.can_admin_note(authed_user, note);
 
     return dict(note=note, canUserAdminNote=canUserAdminNote);
 
@@ -357,9 +356,22 @@ def note_admin():
         session.flash = T('invalid request');
         redirect(URL('index'));
 
-    if not userControl.can_admin_note(authed_user, noteId):
+    note = searcher.get_note(noteId);
+
+    if not userControl.can_admin_note(authed_user, note):
         session.flash = T('You are not authorized to view that page');
         redirect(URL('index'));
+
+    changeFileForm = FORM("Update notes file: ", INPUT(_type='file', _name='upload', requires=IS_UPLOAD_FILENAME(extension='pdf')), INPUT(_type='submit', _name='submit'));
+
+    if changeFileForm.accepts(request.vars, session, formname="ChangeFileForm"):
+        if submitNotes.update_note_file(noteId, authed_user.user_id, changeFileForm.vars.upload):
+            note = searcher.get_note(noteId);
+            response.flash = 'Successfully updated notes';
+        else:
+            response.flash = 'Could not update your notes';
+    elif changeFileForm.errors:
+        response.flash = 'Error, invalid file';
 
     deleteNoteForm = FORM("Remove these notes? ", INPUT(_type='submit', _name='submit'));
 
@@ -369,9 +381,8 @@ def note_admin():
         redirect(URL('index'));
     elif deleteNoteForm.errors:
         session.flash = 'Could not delete note %d' % (userId);
-        
-    note = searcher.get_note(noteId);
-    return dict(note=note, deleteNoteForm=deleteNoteForm);
+    
+    return dict(note=note, changeFileForm=changeFileForm, deleteNoteForm=deleteNoteForm);
 
 
 def loremipsum():
