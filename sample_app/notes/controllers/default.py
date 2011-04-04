@@ -34,10 +34,52 @@ def index():
 
     in this case, just select all the notes and return them to the view
     """
-    all_notes = db().select(db.notes.ALL, orderby=db.notes.end_date)
-    all_courses = db().select(db.courses.ALL, orderby=db.courses.number)
+    if authed_user != None:
+        if authed_user.role == User.ROLE_ADMIN:
+            redirect(URL('admin_index'));
+        elif authed_user.role == User.ROLE_SUBMITTER:
+            redirect(URL('submitter_index'));
+        elif authed_user.role == User.ROLE_CONSUMER:
+            redirect(URL('consumer_index'));
+        else:
+            pass #this is an error
     
-    return dict(notes=all_notes, courses=all_courses)
+    #all_notes = db().select(db.notes.ALL, orderby=db.notes.end_date)
+    #all_courses = db().select(db.courses.ALL, orderby=db.courses.number)
+    
+    return dict()
+
+def admin_index():
+    """
+    The index page the administrator is redirected to
+    """
+    if authed_user == None or authed_user.role != User.ROLE_ADMIN:
+        session.flash = T('You are not authorized to view that page');
+        redirect(URL('index'));
+    # currently does nothing but present links
+    return dict();
+
+def submitter_index():
+    """
+    The index page the submitter is redirected to
+    """
+    if authed_user == None or authed_user.role != User.ROLE_SUBMITTER:
+        session.flash = T('You are not authorized to view that page');
+        redirect(URL('index'));
+    # currently does nothing but present links
+    # it could, for example, grab this user's last 5 submissions or something
+    return dict();
+
+def consumer_index():
+    """
+    The index page the consumer is redirected to
+    """
+    if authed_user == None or authed_user.role != User.ROLE_CONSUMER:
+        session.flash = T('You are not authorized to view that page');
+        redirect(URL('index'));
+    # currently does nothing but present links
+    # it could, for example, grab this user's last 5 viewed notes
+    return dict();
 
 def courses():
     """
@@ -290,7 +332,9 @@ def note_info():
         session.flash = T('invalid request');
         redirect(URL('index'));
 
-    if not userControl.can_view_note(authed_user, noteId):
+    note = searcher.get_note(noteId);
+
+    if not userControl.can_view_note(authed_user, note):
         session.flash = T('You are not authorized to view that page');
         redirect(URL('index'));
 

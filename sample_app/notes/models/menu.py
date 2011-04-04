@@ -26,24 +26,31 @@ response.menu = [
 ##########################################
 ## Notes menu items
 ########################################## 
-    
-response.menu += [
-    (T('Add Notes'), False, URL('default','add_notes'), [])
-    ]    
-response.menu += [
-    (T('Search Notes'), False, URL('default','search_notes'), [])
-    ]    
-response.menu += [
-    (T('Edit Courses'), False, URL('default','courses'), [])
-    ]    
 
-##########################################
-## this is here to provide shortcuts
-## during development. remove in production
-##########################################
-response.menu+=[
-    (T('This App'), False, URL('admin', 'default', 'design/%s' % request.application),
-     [
+if authed_user != None:
+    response.menu += [
+        (T('Search Notes'), False, URL('default','search_notes'), [])
+    ]
+    response.menu += [
+        (T('Search Users'), False, URL('default','search_users'), [])
+    ]
+
+    if authed_user.role == User.ROLE_SUBMITTER or authed_user.role == User.ROLE_ADMIN:
+        response.menu += [
+            (T('Add Notes'), False, URL('default','add_notes'), [])
+        ]
+
+    if authed_user.role == User.ROLE_ADMIN:
+        response.menu += [
+            (T('Edit Courses'), False, URL('default','courses'), [])
+        ]
+        response.menu += [
+            (T('Add User'), False, URL('default','create_user'), [])
+        ]
+        # throw this in for admin debugging
+        response.menu+=[
+            (T('This App'), False, URL('admin', 'default', 'design/%s' % request.application),
+             [
             (T('Controller'), False,
              URL('admin', 'default', 'edit/%s/controllers/%s.py' \
                      % (request.application,request.controller=='appadmin' and
@@ -73,15 +80,15 @@ response.menu+=[
             (T('About'), False,
              URL('admin', 'default', 'about/%s' \
                      % request.application)),
-
             ]
-   )]
+            )]
 
 
 ##########################################
 ## this is here to provide shortcuts to some resources
 ## during development. remove in production
 ##########################################
+"""
 response.menu+=[(T('Resources'), False, None,
      [
     (T('Documentation'), False, 'http://www.web2py.com/book',
@@ -126,3 +133,4 @@ response.menu+=[(T('Resources'), False, None,
         ]),
     ]
    )]
+"""
